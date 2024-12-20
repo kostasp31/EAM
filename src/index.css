@@ -1,0 +1,114 @@
+.error {
+  color: red;
+  background: lightgrey;
+  font-size: 15px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.button {
+  font-family:'Segoe UI';
+  background-color: #da950b;
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 1px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  width: 5%;
+}
+
+.button:hover {
+  background-color: #48c1df;
+  transition-duration: 500ms;
+}
+
+.imageLogo {
+  /* display: block; */
+  height: 15%;
+  width: 15%;
+  border-radius: 10px;
+  margin-top: 1%;
+  margin-left: 1%;
+  opacity: 0.7;
+}
+
+.logoDiv {
+  display: relative; /* or block */
+  z-index: 10; /* optional, but recommended */
+  position: absolute;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url("/background_home1.jpg");
+  background-attachment:fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family:'Segoe UI';
+}
+
+input {
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.loginButton {
+  background-color: #04AA6D;
+  border: 0;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 1.6rem;
+  font-weight: 600;
+  font-family:'Segoe UI';
+  height: 40px;
+  line-height: 40px;
+  padding: 0 24px;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 28px;
+}
+
+
+.formGrandpa {
+  display: table;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+
+  z-index: 1;
+}
+
+.formParent {
+  display: table-cell;
+  vertical-align: middle;
+
+  z-index: 1;
+}
+
+.forms {
+  margin-left: auto;
+  margin-right: auto;
+  width: 300px;
+
+  text-align: center;
+
+  padding: 5px 5px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  border-radius: 5px;
+}

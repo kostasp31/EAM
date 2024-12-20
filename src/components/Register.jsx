@@ -8,7 +8,7 @@ const Register = () => {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const SignUp = async(event) => {
+  const SignUp = async (event) => {
     event.preventDefault() // Prevent default form submission
 
     setLoading(true)

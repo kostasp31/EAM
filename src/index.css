@@ -154,10 +154,6 @@ input::placeholder {
   font-size: 1.1em;
 }
 
-
-/* --------------------------FORMS-END--------------------------- */
-
-/* CSS */
 .button-40 {
   background-color: #111827;
   border: 1px solid transparent;
@@ -186,3 +182,57 @@ input::placeholder {
 .button-40:hover {
   background-color: #374151;
 }
+
+/* --------------------------FORMS-END--------------------------- */
+
+nav {
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  /* padding-left: 30px; */
+  /* padding-right: 10px; */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: inline-block;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+
+  margin-right: 5px;
+}
+
+.nav-item a {
+  display: inline-block;
+  padding: 10px 15px;
+
+  text-decoration: none;
+  color: rgb(0, 0, 0);
+
+  /* border: 2px solid black; */
+  border-radius: 7px;
+}
+
+.nav-item:hover {
+  background-color: rgb(206, 205, 205);
+  border-radius: 7px;
+}
+
+/* .nav-item:hover a {
+  color: darkgreen;
+} */
+
+.logo img {
+  width: 175px;
+  vertical-align: middle;
+  margin-left: 30px;
+}
+/* --------------------------NAVBAR-START--------------------------- */
+
+
+
+/* --------------------------NAVBAR-END--------------------------- */

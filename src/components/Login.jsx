@@ -2,13 +2,17 @@ import React, { useEffect, useState } from 'react'
 import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 import { FIREBASE_AUTH } from '../config/firebase'
+import { collection, addDoc, query, where, getDocs, QuerySnapshot } from 'firebase/firestore'
 
 const Login = () => {
   const [email, setEmail] = useState('')
+  const [emailErrorMessage, setEmailErrorMessage] = useState('')
   const [password, setPassword] = useState('')
+  const [passErrorMessage, setPassErrorMessage] = useState('')
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
   const [passwordVisible, setPasswordVisible] = useState("password")
+
+  // const [wrongCredentials, setWrongCredentials] = useState(false)
 
   const navigate = useNavigate()
 
@@ -16,16 +20,34 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault() // Prevent default form submission
     setLoading(true) // Indicate login is in progress
-    setError('') // Clear previous error
-
-    try {
-      const userCredential = await signInWithEmailAndPassword(FIREBASE_AUTH, email, password)
-      console.log("User logged in:", userCredential.user)
-      navigate('/profile') // Navigate to the courses page after successful login
-    } catch (error) {
-      setError(error.message) // Display the error message
-    } finally {
-      setLoading(false) // Reset the loading state
+    
+    if (email === '' || password === '') {
+      if (email === '') {
+        setEmailErrorMessage('Υποχρεωτικό πεδίο')
+      }
+      if (password === '') {
+        setPassErrorMessage('Υποχρεωτικό πεδίο')
+      }
+      setLoading(false) // Indicate login is in progress
+    }
+    else { 
+      try {
+        const userCredential = await signInWithEmailAndPassword(FIREBASE_AUTH, email, password)
+        console.log("User logged in:", userCredential.user)
+        navigate('/profile') // Navigate to the courses page after successful login
+      } catch (error) {
+        if (error.code === 'auth/invalid-credential') {
+          setEmailErrorMessage('Ελέγξτε το email σας')
+          setPassErrorMessage('Ελέγξτε τον κωδικό σας')
+        }
+        else if (error.code === 'auth/invalid-email') {
+          setEmailErrorMessage('Μη έγκυρο email')
+        }
+        else
+          alert(error.code)
+      } finally {
+        setLoading(false) // Reset the loading state
+      }
     }
   }
 
@@ -58,31 +80,49 @@ const Login = () => {
           <div className='forms'>
             <h1 className='blk'>Σύνδεση</h1>
             <br />  
-            {/* {error && <p className  ="error-message">{error}</p>} Display error message */}
             <form onSubmit={handleLogin} className='flex-container'>
               <div>
                 <input
                   id='mail'
-                  type='email'
+                  type='text'
                   className='form-input'
                   placeholder='Email'
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+                  onChange={(e) => {
+                    setEmail(e.target.value)
+                    setEmailErrorMessage('')
+                    setPassErrorMessage('')
+                  }}
+                  style={!emailErrorMessage ? {} : {borderColor:'#ff0000'}}
+                  // required
                 />
+                <div style={!emailErrorMessage ? {display:'none'} : {display:'', float:'left', color:'#ff0000'}}>
+                  <span><img src='/icons/warning.png' style={{verticalAlign:'middle'}} /><span style={{verticalAlign:'middle'}}> {emailErrorMessage}</span></span>
+                </div>
               </div>
               <div className='pass-input-container'>
-                  <input
-                    id='pass'
-                    type={passwordVisible}
-                    className='form-input'
-                    placeholder='Κωδικός'
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                  <img src={passwordVisible == "password" ? "/icons/view_24.png" : "/icons/hide_32.png"} onClick={togglePassVisibility} className='eye-icon'/>
+                <input
+                  id='pass'
+                  type={passwordVisible}
+                  className='form-input'
+                  placeholder='Κωδικός'
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value)
+                    setEmailErrorMessage('')
+                    setPassErrorMessage('')
+                  }}
+                  style={!passErrorMessage ? {} : {borderColor:'#ff0000'}}
+                  // required
+                />
+                <img src={passErrorMessage == "password" ? "/icons/view_24.png" : "/icons/hide_32.png"} onClick={togglePassVisibility} className='eye-icon'/>
+
+
               </div>
+                <div style={!passErrorMessage ? {display:'none'} : {float:'left', color:'#ff0000', verticalAlign:'middle', position:'relative', marginTop:-20, textAlign:'left'}}>
+                  <img src='/icons/warning.png' style={{verticalAlign:'middle'}} />
+                  <span style={{verticalAlign:'middle'}}> {passErrorMessage}</span>
+                </div>
               <div>
                 <button className='button-40' type="submit" disabled={loading}>Σύνδεση</button>
               </div>

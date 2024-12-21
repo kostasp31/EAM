@@ -140,10 +140,6 @@ body {
   border-radius: .75rem;
 }
 
-input::placeholder {
-  font-size: 1.1em;
-}
-
 .eye-icon {
   position: absolute;
   right: 10px;
@@ -154,7 +150,12 @@ input::placeholder {
   height: 20px;
 }
 
-/* --------------------------FORMS--------------------------- */
+input::placeholder {
+  font-size: 1.1em;
+}
+
+
+/* --------------------------FORMS-END--------------------------- */
 
 /* CSS */
 .button-40 {

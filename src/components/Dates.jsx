@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Profile = () => {
+const Dates = () => {
 
   return (    
     <div>
@@ -24,13 +24,13 @@ const Profile = () => {
         <a href="/search">Αναζήτηση</a>
         <a href="/applications">Αιτήσεις</a>
         <a href="/colabs">Συνεργασίες</a>
-        <a href="/dates">Ραντεβού</a>
+        <a href="/dates" style={{backgroundColor:'rgb(50, 165, 154)'}}>Ραντεβού</a>
         <a href="/notifs">Ειδοποιήσεις</a>
-        <a href="/profile" style={{backgroundColor:'rgb(50, 165, 154)'}}>Προφίλ</a>
+        <a href="/profile">Προφίλ</a>
         <a href="/help" style={{borderBottom:'1px solid white'}}>Βοήθεια</a>
       </div>
     </div>
   )
 }
 
-export default Profile
+export default Dates

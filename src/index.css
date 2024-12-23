@@ -48,12 +48,13 @@ body {
   margin: 0;
   padding: 0;
 
-  /* background-image: url("/background_home1.jpg"); */
-  /* background-attachment:fixed;
-  background-repeat: no-repeat;
+  /* background-image: url("backgrounds/skibidi.jpg"); */
+  /* background-attachment:fixed; */
+  /* background-repeat: no-repeat;
   background-size: cover; */
 
-  background-color: #f4f4f4;
+
+  background-color: #ffffff;
   font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
 }
 
@@ -187,12 +188,15 @@ input::placeholder {
 
 nav {
   width: 100%;
-  background-color: rgba(245, 245, 245, 0);
+  background-color: rgb(245, 245, 245);
   /* padding-left: 30px; */
   /* padding-right: 10px; */
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  position: fixed;
+
 }
 
 .logo {
@@ -316,20 +320,111 @@ nav {
   flex-direction: row;
 
   border: 2px solid #111827;
-  border-radius: 7px;
-  gap: 10px;
+  border-radius: 25px;
+
+  gap: 20px;
+
+  padding: 10px;
 }
 
 .searchbar-main-icon {
-  margin: 10px 0px;
+  /* margin: 10px 0px; */
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .searchbar-main-input {
   /* padding: 12px 20px; */
 
   vertical-align: middle;
-  border: 1px solid #ccc;
+  outline-width: 0;
+  border: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+
+  background-color: #00000000;
+
+}
+
+.searchbar-main-input:focus {
+  /* padding: 12px 20px; */
+  outline: none;
+  border: 0;
   /* border-radius: 4px; */
 }
 
  /* --------------------------MAIN-ABOVE-FOLD-END--------------------------- */
+ 
+ /* --------------------------SIDEBAR-START--------------------------- */
+ /* The sidebar menu */
+ .sidenav {
+   height: 100%; /* Full-height: remove this if you want "auto" height */
+   width: 250px; /* Set the width of the sidebar */
+   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+   z-index: 1; /* Stay on top */
+   top: 0; /* Stay at the top */
+   left: 0;
+   background-color: turquoise; /* Black */
+   overflow-x: hidden; /* Disable horizontal scroll */
+   padding-top: 20px;
+   margin-top: 74px;
+  }
+  
+  /* The navigation menu links */
+  .sidenav a {
+    padding: 16px 8px 16px 16px;
+    text-decoration: none;
+    font-size: 25px;
+    color: white;
+    display: block;
+    border-top: 1px solid white;
+    /* margin-bottom: 1px; */
+  }
+  
+  /* When you mouse over the navigation links, change their color */
+  .sidenav a:hover {
+    color: #f1f1f1;
+  }
+  
+  /* Style page content */
+  .main {
+    margin-left: 160px; /* Same as the width of the sidebar */
+    padding: 0px 10px;
+  }
+  
+  /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
+  @media screen and (max-height: 450px) {
+    .sidenav {padding-top: 15px;}
+    .sidenav a {font-size: 18px;}
+  }
+  
+  /* --------------------------SIDEBAR-END--------------------------- */
+  
+.verticalLine {
+  border-left: 2px solid #000000;
+  border-radius: 20px;
+}
+
+
+.calendar-cell {
+  border: 2px solid #000000;
+}
+
+td {
+  padding: 10px;
+  text-align: center;
+
+  width: 20px;
+  height: 20px;
+}
+
+table {
+  
+}
+
+.idk {
+  font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+  font-size: 1.700rem;
+  font-weight: 700;
+  
+}

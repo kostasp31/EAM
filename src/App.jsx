@@ -13,6 +13,8 @@ import Help from "./components/Help"
 import Notifications from "./components/Notifications"
 import Announcements from "./components/Announcements"
 
+import Conditions from "./components/Conditions"
+
 
 const App = () => {
 
@@ -29,6 +31,7 @@ const App = () => {
           <Route path="colabs" element={<Colabs />} />
           <Route path="dates" element={<Dates />} />
           <Route path="help" element={<Help />} />
+          <Route path="help/conditions" element={<Conditions />} />
           <Route path="notifs" element={<Notifications />} />
           <Route path="announcements" element={<Announcements />} />
           <Route path="/" element={<Root />} />

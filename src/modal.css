@@ -1,0 +1,19 @@
+/* .box {
+  padding: 50px;
+  border: 2px solid rgb(240, 237, 237);
+  box-shadow: 10px 10px 5px lightgray;
+  background-color: #F4F4F4;
+  width: 500px;
+  position: absolute;
+  z-index: 5000; 
+
+  filter: blur(-3px);
+} */
+/* 
+body {
+  overflow: hidden;
+}
+
+body:not(#box) {
+  filter: blur(3px);
+} */

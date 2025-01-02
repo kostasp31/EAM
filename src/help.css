@@ -3,7 +3,7 @@
   max-width: fit-content;
   margin-left: auto;
   margin-right: auto;
-  /* height: 100vh; */
+  height: auto;
 
   margin-bottom: 300px;
 }

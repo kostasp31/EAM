@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import "../help.css"
 
 import Footer from './Footer'
+import ScrollButton from './ScrollButton'
 
 const Help = () => {
   const navigate = useNavigate()
@@ -23,6 +24,8 @@ const Help = () => {
           <li className="nav-item"><a href="/login">Σύνδεση</a></li>
         </ul>
       </nav>
+
+      <ScrollButton />
 
       <div className='main-content'>
         <div className='main-heading'>
@@ -60,13 +63,13 @@ const Help = () => {
             </div>
           </div>
           <div className='second-row'>
-            <div className='second-row-element' onClick={() => navigate('/')}>
+            <div className='second-row-element' onClick={() => navigate('/help/FAQ_parents')}>
             <div className='heading'>FAQ - Γονείς</div>
             <div className='content'>
             Συχνές ερωτήσεις σχετικά με τη χρήση της πλατφόρμας και τι προϋποθέσεις δήλωσης από τους ενδιαφερόμενους γονείς.
               </div>
             </div>
-            <div className='second-row-element' onClick={() => navigate('/')}>
+            <div className='second-row-element' onClick={() => navigate('/help/FAQ_professionals')}>
             <div className='heading'>FAQ - Επαγγελματίες</div>
             <div className='content'>
             Συχνές ερωτήσεις σχετικά με τη χρήση της πλατφόρμας και τι προϋποθέσεις δήλωσης από τους ενδιαφερόμενους επαγγελματίες.

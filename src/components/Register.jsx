@@ -20,8 +20,11 @@ const Register = () => {
   const [AFM, setAFM] = useState('')
   const [AFMErrorMessage, setAFMErrorMessage] = useState('')
   const [loading, setLoading] = useState(false)
-  const [passwordVisible, setPasswordVisible] = useState('')
+  const [passwordVisible, setPasswordVisible] = useState("password")
   const [passwordVerifyVisible, setPasswordVerifyVisible] = useState("password")
+  
+  const [category, setCategory] = useState('')
+  const [categoryErrorMessage, setCategoryErrorMessage] = useState('')
 
   const navigate = useNavigate()
   let regexAFM = /^[0-9]{9}$/
@@ -73,17 +76,22 @@ const Register = () => {
     if (passwordVerify === '')
       setPasswordVerifyErrorMessage('Υποχρεωτικό πεδίο')
 
+    if (category === '') {
+      setCategoryErrorMessage('Υποχρεωτικό πεδίο')
+      weak = true
+    }
+
     // setLoading(false)
 
     if (email === '' || password === '' || weak)
       ;
     else {
-      console.log("no")
       let res1;
+      let failed = false
       try {
         res1 = await createUserWithEmailAndPassword(FIREBASE_AUTH, email, password)
-        navigate("/profile")
-        // console.log("User registered:", res1)
+        // navigate("/profile")
+        console.log("User registered:", res1)
       } catch (error) {
         if (error.code === 'auth/invalid-email') {
           setEmailErrorMessage('Μη έγκυρο email')
@@ -93,26 +101,37 @@ const Register = () => {
         }
         else 
           alert(error.code)
+        failed = true
       }
 
+      if (!failed) {
+        const payload = {
+          "name":name,
+          "surname":surname,
+          "AFM":AFM,
+          "email":email,
+          "user_category":category,
+          "uid": res1.user.uid,
+        }
 
-        // const payload = {
-        //   "name":name,
-        //   "surname":surname,
-        //   "AFM":AFM,
-        //   "email":email
-        // }
-
-        // try {
-        //   const res2 = await addDoc(collection(FIREBASE_DB, 'user_data'), payload)
-        //   // window.location.href = "/profile"
-        // } catch (error) {
-        //   alert(error.message)
-        // } finally {
-        //   // setLoading(false)
-        //   navigate('/profile')
-        // }
-        // // setLoading(false)
+        if (category === 'parent') {
+          try {
+            const res2 = await addDoc(collection(FIREBASE_DB, 'user_data'), payload)
+          } catch (error) {
+            alert(error.message)
+          }
+          navigate('/parent')
+        }
+        else {
+          try {
+            const res2 = await addDoc(collection(FIREBASE_DB, 'user_data'), payload)
+          } catch (error) {
+            alert(error.message)
+          }
+          navigate('/profs')
+        }
+        
+      }
 
 
     }
@@ -257,6 +276,37 @@ const Register = () => {
                   <img src='/icons/warning.png' style={{verticalAlign:'middle'}} />
                   <span style={{verticalAlign:'middle'}}> {passwordVerifyErrorMessage}</span>
               </div>
+
+              <div style={{textAlign:'left'}}>
+                Είστε γονέας ή επαγγελματίας;
+              </div>
+
+              <div className='radio-group'>
+                <div>
+                  <input type="radio" name="category" id="parent" value="parent" onClick={() => {
+                    setCategory('parent')
+                    setCategoryErrorMessage('')
+                  }}/>
+                  <label for="parent" style={{marginRight:'40px'}} onClick={() => {
+                    setCategory('parent')
+                    setCategoryErrorMessage('')
+                  }}>Γονέας</label>
+
+                  <input type="radio" name="category" id="prof" value="proffesional" onClick={() => {
+                    setCategory('professional')
+                    setCategoryErrorMessage('')
+                    }}/>
+                  <label for="prof" onClick={() => {
+                    setCategory('professional')
+                    setCategoryErrorMessage('')
+                    }}>Επαγγελματίας</label>
+                </div>
+              </div>
+              <div style={!categoryErrorMessage ? {display:'none'} : {float:'left', color:'#ff0000', verticalAlign:'middle', position:'relative', marginTop:-20, textAlign:'left'}}>
+                  <img src='/icons/warning.png' style={{verticalAlign:'middle'}} />
+                  <span style={{verticalAlign:'middle'}}> {categoryErrorMessage}</span> 
+              </div>
+
               <div>
                 <button className='button-40' type="submit" disabled={loading}>Εγγραφή</button>
               </div>
@@ -268,6 +318,7 @@ const Register = () => {
               {/* <div>
                 Δεν έχετε λογαριασμό; <br /> <u><a style={{color:'blue', cursor:'pointer'}} onClick={() => navigate('/register')}>Δημιουργία λογαριασμού</a></u>
               </div> */}
+
             </form>
           </div>
           </div>

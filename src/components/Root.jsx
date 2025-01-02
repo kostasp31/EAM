@@ -12,6 +12,8 @@ import '../accordion.css' // Import default styles
 
 import Footer from './Footer'
 
+import ScrollButton from './ScrollButton'
+
 const Root = () => {
   const navigate = useNavigate()
 
@@ -49,7 +51,7 @@ const Root = () => {
           <div className='personas-buttons'>
             <div style={{display:'flex', flexDirection:'row', gap:'5px'}}>
               <button className='persona1-button' onClick={() => navigate('parent')}>Για γονείς</button>
-              <button className='persona2-button' onClick={() => navigate('prof')}>Για επαγγελματίες</button>
+              <button className='persona2-button' onClick={() => navigate('profs')}>Για επαγγελματίες</button>
             </div>
           </div>
           <div className='searchbar-main'>
@@ -441,37 +443,5 @@ const Root = () => {
     </div>
   )
 }
-
-
-const ScrollButton = () => {
-  const [visible, setVisible] = useState(false)
-
-  const toggleVisible = () => {
-      const scrolled = document.documentElement.scrollTop
-      if (scrolled > 300) {
-          setVisible(true)
-      } else if (scrolled <= 300) {
-          setVisible(false)
-      }
-  }
-
-  const scrollToTop = () => {
-      window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-          /* you can also use 'auto' behaviour
-       in place of 'smooth' */
-      })
-  }
-
-  window.addEventListener("scroll", toggleVisible)
-
-  return (
-      <button className='scrollButton' onClick={scrollToTop} style={{visibility: visible ? "visible" : "hidden"}}>
-        <img width="30px" src='icons/uparrow.svg' />
-      </button>
-  )
-}
-
 
 export default Root

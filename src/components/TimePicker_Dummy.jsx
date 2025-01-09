@@ -58,7 +58,7 @@ const TimePickerDay = ({day, availability}) => {
     case 'Δευτέρα':
       start = availability["monday-start"]
       end = availability["monday-end"]
-      extraStyle= {height:'56px', backgroundColor:'turquoise'}
+      extraStyle= {height:'56px', backgroundColor:'white'}
       break
     case 'Τρίτη':
       start = availability["tuesday-start"]
@@ -68,7 +68,7 @@ const TimePickerDay = ({day, availability}) => {
     case 'Τετάρτη':
       start = availability["wednesday-start"]
       end = availability["wednesday-end"]
-      extraStyle= {height:'56px', backgroundColor:'turquoise'}
+      extraStyle= {height:'56px', backgroundColor:'white'}
       break
     case 'Πέμπτη':
       start = availability["thursday-start"]
@@ -78,7 +78,7 @@ const TimePickerDay = ({day, availability}) => {
     case 'Παρασκευή':
       start = availability["friday-start"]
       end = availability["friday-end"]
-      extraStyle= {height:'56px', backgroundColor:'turquoise'}
+      extraStyle= {height:'56px', backgroundColor:'white'}
       break
     case 'Σάββατο':
       start = availability["saturday-start"]
@@ -88,7 +88,7 @@ const TimePickerDay = ({day, availability}) => {
     case 'Κυριακή':
       start = availability["sunday-start"]
       end = availability["sunday-end"]
-      extraStyle= {height:'56px', backgroundColor:'turquoise'}
+      extraStyle= {height:'56px', backgroundColor:'white'}
       break
   }
 

@@ -2,11 +2,99 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import "../help.css"
 
-import Footer from './Footer'
 import ScrollButton from './ScrollButton'
+
+
+import Footer from "./Footer.jsx"
+import { FIREBASE_AUTH, FIREBASE_DB, FIREBASE_APP } from '../config/firebase'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
+import { collection, addDoc, query, where, getDocs } from 'firebase/firestore'
+import { useState, useEffect } from 'react'
 
 const Help = () => {
   const navigate = useNavigate()
+  const [userData, setUserData] = useState([])
+  const [userId, setUserId] = useState(null)
+  const [isProf, setIsProf] = useState('')
+  const [clickedProfile, setClickedProfile] = useState(false)
+
+  const [meanRating, setMeanRating] = useState(null)
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      if (user) {
+        setUserId(user.uid) // Store the user's UID
+      } else {
+        setUserId(null)
+      }
+    })
+
+    return () => unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    if (userId) {
+      fetchUserData() // Fetch user data only after the user_id is available
+    }
+  }, [userId])
+
+  const handleLogout = async () => {
+    try {
+      await signOut(FIREBASE_AUTH)
+      navigate('/')
+    } catch (error) {
+      console.error('Error logging out:', error)
+    }
+  }
+
+  const handleLogoutLogin = async () => {
+    try {
+      await signOut(FIREBASE_AUTH)
+      navigate('/login')
+    } catch (error) {
+      console.error('Error logging out:', error)
+    }
+  }
+
+  const fetchUserData = async () => {
+    try {
+      const q = query(collection(FIREBASE_DB, 'user_data'), where('uid', '==', userId)) // Query only data matching the user's UID
+      const querySnapshot = await getDocs(q)
+      const users = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      // console.log("user id: ", userId)
+      // console.log("user data: ", users)
+      setUserData(users)
+
+      if (users[0] && users[0].user_category === 'professional') {
+        setIsProf('professional')
+        if (users[0].ratings) {
+          let count = 0
+          for (let i=0; i<users[0].ratings.length; i++)
+            count += users[0].ratings[i].rating
+          setMeanRating(count / users[0].ratings.length)
+        }
+        else {
+          setMeanRating(-1)
+        }
+      }
+      else
+        setIsProf('parent')
+    } catch (error) {
+      console.error('Error fetching user data:', error)
+    }
+  }
+
+  const CircleWithInitials = ({ name, surname }) => {
+    let initials = name[0]+surname[0]
+    return (
+      <div className="circle">
+        {initials}  
+    </div>
+    )
+  }
 
   // TODO; fix onClick
   return (    
@@ -21,7 +109,31 @@ const Help = () => {
           <li className="nav-item"><a href="/parent">Γονείς</a></li>
           <li className="nav-item"><a href="/announcements">Ανακοινώσεις</a></li>
           <li className="nav-item" style={{backgroundColor:'rgb(206, 205, 205)', borderRadius:'7px'}}><a href="/help">Βοήθεια</a></li>
-          <li className="nav-item"><a href="/login">Σύνδεση</a></li>
+          {(window.localStorage.length && userData[0]) ?
+            <li>
+              <div style={{cursor:'pointer', marginRight:'10px'}} onClick={() => setClickedProfile(!clickedProfile)}>
+                <CircleWithInitials name={userData[0].name} surname={userData[0].surname} />
+              </div>
+              { clickedProfile ?
+              <div className="menu">
+                <ul>
+                  {userData[0].user_category === 'professional' ?
+                    <li><a href="/profile_profs">Profile</a></li>
+                    :
+                    <li><a href="/profile">Profile</a></li>
+                  }
+
+                  <li onClick={handleLogout} style={{color:'#ff0000'}}>Logout</li>
+                </ul>
+              </div>
+              : '' }
+            </li>
+          :
+            (!window.localStorage.length) ?
+              <li class="nav-item"><a href="/login">Σύνδεση</a></li>
+            :
+              ''
+          }
         </ul>
       </nav>
 

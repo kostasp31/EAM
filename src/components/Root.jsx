@@ -1,9 +1,13 @@
 import { useNavigate } from 'react-router-dom'
-import {useState }from 'react'
+import {useState, useEffect }from 'react'
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import React from "react"
 import Slider from "react-slick"
+
+import { FIREBASE_AUTH, FIREBASE_DB, FIREBASE_APP } from '../config/firebase'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
+import { collection, addDoc, query, where, getDocs } from 'firebase/firestore'
 
 import StarRatings from 'react-star-ratings'
 
@@ -16,6 +20,76 @@ import ScrollButton from './ScrollButton'
 
 const Root = () => {
   const navigate = useNavigate()
+  const [userData, setUserData] = useState([])
+  const [userId, setUserId] = useState(null)
+  const [isProf, setIsProf] = useState('')
+  const [clickedProfile, setClickedProfile] = useState(false)
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      if (user) {
+        setUserId(user.uid) // Store the user's UID
+      } else {
+        setUserId(null)
+      }
+    })
+
+    return () => unsubscribe()
+  }, [])
+
+  useEffect(() => {
+    if (userId) {
+      fetchUserData() // Fetch user data only after the user_id is available
+    }
+  }, [userId])
+
+  const handleLogout = async () => {
+    try {
+      await signOut(FIREBASE_AUTH)
+      navigate('/')
+    } catch (error) {
+      console.error('Error logging out:', error)
+    }
+  }
+
+  const handleLogoutLogin = async () => {
+    try {
+      await signOut(FIREBASE_AUTH)
+      navigate('/login')
+    } catch (error) {
+      console.error('Error logging out:', error)
+    }
+  }
+
+  const fetchUserData = async () => {
+    try {
+      const q = query(collection(FIREBASE_DB, 'user_data'), where('uid', '==', userId)) // Query only data matching the user's UID
+      const querySnapshot = await getDocs(q)
+      const users = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      // console.log("user id: ", userId)
+      // console.log("user data: ", users)
+      setUserData(users)
+
+      if (users[0] && users[0].user_category === 'professional')
+        setIsProf('professional')
+      else
+        setIsProf('parent')
+    } catch (error) {
+      console.error('Error fetching user data:', error)
+    }
+  }
+
+  const CircleWithInitials = ({ name, surname }) => {
+    let initials = name[0]+surname[0]
+    return (
+      <div className="circle">
+        {initials}  
+    </div>
+    )
+  }
 
   let carouselSettings = {
     slidesToShow: 3,
@@ -37,8 +111,31 @@ const Root = () => {
           <li className="nav-item"><a href="/parent">Γονείς</a></li>
           <li className="nav-item"><a href="/announcements">Ανακοινώσεις</a></li>
           <li className="nav-item"><a href="/help">Βοήθεια</a></li>
-          <li className="nav-item"><a href="/login">Σύνδεση</a></li>
-          {/* <li className="nav-item-log"><a href="/re gister">Εγγραφή</a></li> */}
+          {(window.localStorage.length && userData[0]) ?
+            <li>
+              <div style={{cursor:'pointer', marginRight:'10px'}} onClick={() => setClickedProfile(!clickedProfile)}>
+                <CircleWithInitials name={userData[0].name} surname={userData[0].surname} />
+              </div>
+              { clickedProfile ?
+              <div className="menu">
+                <ul>
+                  {userData[0].user_category === 'professional' ?
+                    <li><a href="/profile_profs">Προφίλ</a></li>
+                    :
+                    <li><a href="/profile">Προφίλ</a></li>
+                  }
+
+                  <li onClick={handleLogout} style={{color:'#ff0000'}}>Αποσύνδεση</li>
+                </ul>
+              </div>
+              : '' }
+            </li>
+          :
+            (!window.localStorage.length) ?
+              <li class="nav-item"><a href="/login">Σύνδεση</a></li>
+            :
+              ''
+          }
         </ul>
       </nav>
 

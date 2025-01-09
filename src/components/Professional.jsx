@@ -18,6 +18,8 @@ const Prof = () => {
   const [isProf, setIsProf] = useState('')
   const [clickedProfile, setClickedProfile] = useState(false)
 
+  const [meanRating, setMeanRating] = useState(null)
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
       if (user) {
@@ -66,8 +68,18 @@ const Prof = () => {
       // console.log("user data: ", users)
       setUserData(users)
 
-      if (users[0] && users[0].user_category === 'professional')
+      if (users[0] && users[0].user_category === 'professional') {
         setIsProf('professional')
+        if (users[0].ratings) {
+          let count = 0
+          for (let i=0; i<users[0].ratings.length; i++)
+            count += users[0].ratings[i].rating
+          setMeanRating(count / users[0].ratings.length)
+        }
+        else {
+          setMeanRating(-1)
+        }
+      }
       else
         setIsProf('parent')
     } catch (error) {
@@ -171,8 +183,16 @@ const Prof = () => {
               }
               <hr />
 
-              <h3>Έχετε συνάψει 1 <a href='/colabs' style={{ color: 'blue' }}>συνεργασία</a> (0 ενεργές).</h3>
-              <a className='button-purple-center' href='/colabs' style={{ width: '190px' }}><b style={{ color: '#65558f' }}>Προβολή Συνεργασιών</b></a>
+              {/* {userData[0].colabs.filter((el) => el.active === true).length} */}
+              {!userData[0].colabs || userData[0].colabs.length === 0 ?
+                <h3>Δεν έχετε συνάψει συνεργασίες.</h3>
+                : 
+                userData[0].colabs.length === 1 ?
+                  <h3>Έχετε συνάψει 1 <a href='/colabs_profs' style={{ color: 'blue' }}>συνεργασία</a>.</h3>
+                  :
+                  <h3>Έχετε συνάψει {userData[0].colabs.length} <a href='/colabs_profs' style={{ color: 'blue' }}>συνεργασίες</a>.</h3>
+              }
+              <a className='button-purple-center' href='/colabs_profs' style={{ width: '190px' }}><b style={{ color: '#65558f' }}>Προβολή Συνεργασιών</b></a>
               <hr />
 
               <h3>Έχετε 3 <a href='/notifs' style={{ color: 'blue' }}>ειδοποιήσεις</a>.</h3>
@@ -187,31 +207,38 @@ const Prof = () => {
               
               
                 <h2 style={{ textAlign: 'center', marginTop:'-20px' }}>Αξιολογήσεις</h2>
-                {/* <p style={{ textAlign: 'center', marginTop:'-15px' }}>Βασικά Στοιχεία</p> */}
 
-                <div style={{display:'flex', flexDirection:'row', maxWidth:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
-                  <div style={{verticalAlign:'center', marginTop:'60px', marginRight:'60px'}}>
-                    <StarRatings
-                      rating={3.5}
-                      starRatedColor="gold"
-                      starDimension="30px"
-                      starSpacing="5px"
-                      numberOfStars={5}
-                      name='rating'
-                      style={{alignItems:'left'}}
-                    />
-                  </div>
+                  { meanRating !== -1 ?
+                    <div style={{display:'flex', flexDirection:'row', maxWidth:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
+                    <div style={{verticalAlign:'center', marginTop:'60px', marginRight:'60px'}}>
+                      <StarRatings
+                        rating={meanRating}
+                        starRatedColor="gold"
+                        starDimension="30px"
+                        starSpacing="5px"
+                        numberOfStars={5}
+                        name='rating'
+                        style={{alignItems:'left'}}
+                      />
+                    </div>
 
-                  <div style={{width:'150px', height:'150px'}}>
-                    <MyDoughnutChart rating={3.5} style={{paddingBottom:'5px'}} />
+                    <div style={{width:'150px', height:'150px'}}>
+                      <MyDoughnutChart rating={meanRating} style={{paddingBottom:'5px'}} />
+                    </div>
+                    <b style={{marginLeft:'-100px', marginTop:'70px'}}>{meanRating.toFixed(1)}/5.0</b>
                   </div>
-                  {<b style={{marginLeft:'-100px', marginTop:'70px'}}>3.5/5.0</b>}
-                </div>
+                  :
+
+                  <div className='heading' style={{verticalAlign:'center', marginTop:'60px', marginBottom:'60px',maxWidth:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
+                    Δεν υπάρχουν αξιολογήσεις
+                  </div>
+                }
+
 
 
 
                 <div style={{ display: 'flex', justifyContent: 'center', verticalAlign:'middle' }}>
-                  <a className='button-purple' href='/profile' style={{ color: '#65558f' }}><b>Προβολή Αξιολογήσεων</b></a>
+                  <a className='button-purple' href='/ratings' style={{ color: '#65558f' }}><b>Προβολή Αξιολογήσεων</b></a>
                 </div>
               
             </div>
@@ -286,8 +313,8 @@ const Prof = () => {
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'center', verticalAlign:'center' }}>
-                  <a className='button-purple' href='/profile' style={{ color: '#65558f' }}><b>Προβολή Βιογραφικού</b></a>
-                  <a className='button-purple' href='' style={{ color: 'red' }}><img src='icons/pencil.svg' style={{width:'20px', height:'20px'}} /></a>
+                  <a className='button-purple' href='/bio' style={{ color: '#65558f' }}><b>Προβολή Βιογραφικού</b></a>
+                  <a className='button-purple' href='/bio' style={{ color: 'red' }}><img src='icons/pencil.svg' style={{width:'20px', height:'20px'}} /></a>
                 </div>
             </div>
           </div>

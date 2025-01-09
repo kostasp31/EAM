@@ -68,8 +68,12 @@ const Ad = () => {
       // console.log("user data: ", users)
       setUserData(users)
 
-      if (users[0] && users[0].user_category === 'professional')
+      if (users[0] && users[0].user_category === 'professional') {
         setIsProf('professional')
+        setJobType(users[0].ad["job-type"])
+        setLoc(users[0].ad["location"])
+        setInfo(users[0].ad["info"])
+      }
       else
         setIsProf('parent')
     } catch (error) {
@@ -88,6 +92,8 @@ const Ad = () => {
       "job-type": jobType,
       "info": info
     }
+
+    console.log(advertisment)
 
     try {
       // Create a query against the collection
@@ -234,26 +240,18 @@ const Ad = () => {
 
                             <div className='radio-group' style={{marginTop:'35px'}}>
                               <div>
-                                <input type="radio" name="category" id="parent_loc" value="parent" onClick={() => {
+                                <input type="radio" name="category" id="parent_loc" value="parent" checked={loc === 'parent'} onClick={() => {
                                   setLoc('parent')
-                                  // setCategory('parent')
-                                  // setCategoryErrorMessage('')
                                 }}/>
                                 <label for="parent_loc" style={{marginRight:'40px'}} onClick={() => {
                                   setLoc('parent')
-                                  // setCategory('parent')
-                                  // setCategoryErrorMessage('')
                                 }}>Τοποθεσία γονέα</label>
                                 <br />
-                                <input type="radio" name="category" id="prof_loc" value="proffesional" onClick={() => {
+                                <input type="radio" name="category" id="prof_loc" value="proffesional" checked={loc !== 'parent'}  onClick={() => {
                                   setLoc('professional')
-                                  // setCategory('professional')
-                                  // setCategoryErrorMessage('')
                                 }}/>
                                 <label for="prof_loc" onClick={() => {
                                   setLoc('professional')
-                                  // setCategory('professional')
-                                  // setCategoryErrorMessage('')
                                   }}>Τοποθεσία επαγγελματία</label>
                               </div>
                             </div>
@@ -274,26 +272,18 @@ const Ad = () => {
 
                           <div className='radio-group' style={{marginTop:'35px'}}>
                             <div>
-                              <input type="radio" name="apasxolisi" id="partial" value="parent" onClick={() => {
+                              <input type="radio" name="apasxolisi" id="partial" value="parent" checked={jobType === 'partial'} onClick={() => {
                                 setJobType("partial")
-                                // setCategory('parent')
-                                // setCategoryErrorMessage('')
                               }}/>
                               <label for="partial" style={{marginRight:'40px'}} onClick={() => {
                                 setJobType("partial")
-                                // setCategory('parent')
-                                // setCategoryErrorMessage('')
                               }}>Μερική</label>
                               <br />
-                              <input type="radio" name="apasxolisi" id="full" value="proffesional" onClick={() => {
+                              <input type="radio" name="apasxolisi" id="full" value="proffesional" checked={jobType !== 'partial'}  onClick={() => {
                                 setJobType("full")
-                                // setCategory('professional')
-                                // setCategoryErrorMessage('')
                               }}/>
                               <label for="full" onClick={() => {
                                 setJobType("full")
-                                // setCategory('professional')
-                                // setCategoryErrorMessage('')
                                 }}>Πλήρης</label>
                             </div>
                           </div>
@@ -315,10 +305,10 @@ const Ad = () => {
 
 
                       </div>
-                      <div style={{marginTop:'35px', width:'100%', height:'100%'}}>
-                        <textarea  className='form-input' style={{width:'100%', height:'80%', fontSize:'20px'}} 
-                          onChange={handleInfoChange} 
-                          value={info}/>
+                      <div style={{marginTop:'20px', width:'100%', height:'100%'}}>
+                        <textarea placeholder='Επιπλέον πληροφορίες σχετικά με εσάς' cols="40" rows="50" className='form-input' style={{width:'100%', height:'80%', fontSize:'20px', whiteSpace:'pre-wrap'}} 
+                          onChange={handleInfoChange}
+                          value={info} />
                       </div>
 
                     </div>
@@ -429,8 +419,8 @@ const Ad = () => {
                           </div>
                         </div>
                       </div>
-                      <div className='box1' style={{height:'300px'}}>
-                        <div style={{ width:'fit-content', marginLeft:'auto', marginRight:'auto' }}>
+                      <div className='box1' style={{height:'300px', width:'1000px'}}>
+                        <div style={{ width:'500px', marginLeft:'auto', marginRight:'auto' }}>
 
                           <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
                             <div style={{ display: 'flex', alignItems: 'center' }} >
@@ -441,7 +431,7 @@ const Ad = () => {
 
 
                         </div>
-                        <div style={{marginTop:'35px', width:'100%', height:'100%'}}>
+                        <div style={{marginTop:'34px', width:'100%', height:'100%', fontSize:'20px', fontFamily:"monospace", marginLeft:'21px', whiteSpace:'pre-line'}}>
                           {info}
                         </div>
 

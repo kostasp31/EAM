@@ -34,7 +34,7 @@ const Login = () => {
       try {
         const userCredential = await signInWithEmailAndPassword(FIREBASE_AUTH, email, password)
         console.log("User logged in:", userCredential.user)
-        navigate('/profile') // Navigate to the courses page after successful login
+        navigate('/') // Navigate to the courses page after successful login
       } catch (error) {
         if (error.code === 'auth/invalid-credential') {
           setEmailErrorMessage('Ελέγξτε το email σας')
@@ -54,7 +54,7 @@ const Login = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (currentUser) => {
       if (currentUser) {
-        navigate('/profile') // Navigate to /courses if already logged in
+        navigate('/') // Navigate to /courses if already logged in
       }
     })
 

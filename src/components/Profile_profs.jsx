@@ -20,6 +20,8 @@ const Profile_Profs = () => {
   const [isProf, setIsProf] = useState('')
   const [clickedProfile, setClickedProfile] = useState(false)
 
+  const [reload, setReload] = useState(false)
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
       if (user) {
@@ -36,7 +38,7 @@ const Profile_Profs = () => {
     if (userId) {
       fetchUserData() // Fetch user data only after the user_id is available
     }
-  }, [userId])
+  }, [userId, reload])
 
   const handleLogout = async () => {
     try {
@@ -88,7 +90,6 @@ const Profile_Profs = () => {
   }
 
   const triggerNotif = (type, title, content) => {
-    console.log("hfeuwifg")
     Store.addNotification({
       title: title,
       message: content,
@@ -115,7 +116,7 @@ const Profile_Profs = () => {
           <li className="nav-item"><a href="/">Αρχική σελίδα</a></li>
           <li className="nav-item" style={{ backgroundColor: 'rgb(206, 205, 205)', borderRadius: '7px' }}><a href="/profs">Επαγγελματίες</a></li>
           <li className="nav-item"><a href="/parent">Γονείς</a></li>
-          <li className="nav-item"><a href="/announcements">Ανακοινώσεις</a></li>
+          {/* <li className="nav-item"><a href="/announcements">Ανακοινώσεις</a></li> */}
           <li className="nav-item"><a href="/help">Βοήθεια</a></li>
           {(window.localStorage.length && userData[0]) ?
             <li>
@@ -131,7 +132,7 @@ const Profile_Profs = () => {
                     <li><a href="/profile">Προφίλ</a></li>
                   }
 
-                  <li onClick={handleLogout} style={{color:'#ff0000'}}>Αποσύνδεση</li>
+                  <li onClick={handleLogout} style={{color:'#ff0000', cursor:'pointer'}}>Αποσύνδεση</li>
                 </ul>
               </div>
               : '' }
@@ -171,7 +172,7 @@ const Profile_Profs = () => {
 
       {(userData[0] && userId && userData[0].user_category === "professional") ?
         <div>
-          <ProfileComponent user_data={userData[0]} notif={triggerNotif}/>
+          <ProfileComponent user_data={userData[0]} userId={userId} notif={triggerNotif} reload={reload} setReload={setReload}/>
         </div>
         :
 

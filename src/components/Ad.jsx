@@ -13,6 +13,10 @@ import Modal from './Modal.jsx'
 import TimePicker from './TimePicker.jsx'
 import TimePicker_Dummy from './TimePicker_Dummy.jsx'
 
+import { ReactNotifications, Store } from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
+import 'animate.css/animate.min.css'
+
 const Ad = () => {
   const navigate = useNavigate()
   const [userData, setUserData] = useState([])
@@ -70,7 +74,7 @@ const Ad = () => {
 
       if (users[0] && users[0].user_category === 'professional') {
         setIsProf('professional')
-        setJobType(users[0].ad["job-type"])
+        setJobType(users[0].ad["jobType"])
         setLoc(users[0].ad["location"])
         setInfo(users[0].ad["info"])
       }
@@ -89,11 +93,11 @@ const Ad = () => {
     const advertisment = {
       "hours": hours,
       "location": loc,
-      "job-type": jobType,
+      "jobType": jobType,
       "info": info
     }
 
-    console.log(advertisment)
+    // console.log(advertisment)
 
     try {
       // Create a query against the collection
@@ -108,7 +112,8 @@ const Ad = () => {
           ad: advertisment,
           has_uploaded_ad: true
         })
-        console.log("Document updated successfully")
+        // console.log("Document updated successfully")
+        triggerNotif("success", "Επιτυχία!", "Οι αλλαγές σας υποβλήθηκαν επιτυχώς")
         setEditing(false)
       } else {
         console.log("No such document found with the specified uid!")
@@ -126,9 +131,26 @@ const Ad = () => {
     </div>
     )
   }
+
+  const triggerNotif = (type, title, content) => {
+    Store.addNotification({
+      title: title,
+      message: content,
+      type: type,
+      insert: "top",
+      container: "bottom-right",
+      animationIn: ["animate__animated", "animate__bounceIn"],
+      animationOut: ["animate__animated", "animate__bounceOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true
+      }
+    });
+  }
   
   return (
     <div>
+      <ReactNotifications />
       <nav className="navbar">
         <a href="/" className="logo">
           <img src="/logos/gov_gr_logo.svg" alt="GOV logo" />
@@ -137,7 +159,7 @@ const Ad = () => {
           <li className="nav-item"><a href="/">Αρχική σελίδα</a></li>
           <li className="nav-item" style={{ backgroundColor: 'rgb(206, 205, 205)', borderRadius: '7px' }}><a href="/profs">Επαγγελματίες</a></li>
           <li className="nav-item"><a href="/parent">Γονείς</a></li>
-          <li className="nav-item"><a href="/announcements">Ανακοινώσεις</a></li>
+          {/* <li className="nav-item"><a href="/announcements">Ανακοινώσεις</a></li> */}
           <li className="nav-item"><a href="/help">Βοήθεια</a></li>
           {(window.localStorage.length && userData[0]) ?
             <li>
@@ -148,12 +170,12 @@ const Ad = () => {
               <div className="menu">
                 <ul>
                   {userData[0].user_category === 'professional' ?
-                    <li><a href="/profile_profs">Profile</a></li>
+                    <li><a href="/profile_profs">Προφίλ</a></li>
                     :
-                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/profile">Προφίλ</a></li>
                   }
 
-                  <li onClick={handleLogout} style={{color:'#ff0000'}}>Logout</li>
+                  <li onClick={handleLogout} style={{color:'#ff0000', cursor:'pointer'}}>Αποσύνδεση</li>
                 </ul>
               </div>
               : '' }
@@ -403,7 +425,7 @@ const Ad = () => {
                             </div>
 
                             <div className='profile-key' style={{width:'fit-content', marginLeft:'auto', marginRight:'auto', marginTop:'50px', fontWeight:'700'}}>
-                                {userData[0].ad["job-type"] === 'partial' ?
+                                {userData[0].ad["jobType"] === 'partial' ?
                                     <div>
                                       Μερική απασχόληση
                                     </div>

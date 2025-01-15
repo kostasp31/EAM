@@ -30,7 +30,7 @@ const Footer = () => {
     </div>
     <div style={{display:'flex', flexDirection:'column', textAlign:'left', gap:'10px'}}>
     <h2>Πληροφορίες</h2>
-      <div>Ανακοινώσεις</div>
+      {/* <div>Ανακοινώσεις</div> */}
       <div>Δήλωση ιδιωτικότητας</div>
       <div>Όροι χρήσης</div>
 

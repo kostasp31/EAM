@@ -9,6 +9,10 @@ import { useState, useEffect } from 'react'
 
 import ScrollButton from './ScrollButton.jsx'
 
+import { ReactNotifications, Store } from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
+import 'animate.css/animate.min.css'
+
 const Prof = () => {
   const navigate = useNavigate()
   const [userData, setUserData] = useState([])
@@ -197,7 +201,8 @@ const Prof = () => {
             systatikes: systatikes
           }
         })
-        console.log("Document updated successfully")
+        // console.log("Document updated successfully")
+        triggerNotif("success", "Επιτυχία!", "Οι αλλαγές σας υποβλήθηκαν επιτυχώς")
         setEditing(false)
       } else {
         console.log("No such document found with the specified uid!")
@@ -290,8 +295,25 @@ const Prof = () => {
   const style1 = {borderBottom:'1px solid #000000', padding:'0px 10px 5px 10px', cursor:'pointer'}
   const style2 = {borderBottom:'1px solid #c4c4c4', padding:'0px 10px 5px 10px', cursor:'pointer'}
 
+  const triggerNotif = (type, title, content) => {
+    Store.addNotification({
+      title: title,
+      message: content,
+      type: type,
+      insert: "top",
+      container: "bottom-right",
+      animationIn: ["animate__animated", "animate__bounceIn"],
+      animationOut: ["animate__animated", "animate__bounceOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true
+      }
+    });
+  }
+
   return (
     <div>
+      <ReactNotifications />
       <nav className="navbar">
         <a href="/" className="logo">
           <img src="/logos/gov_gr_logo.svg" alt="GOV logo" />
@@ -300,7 +322,7 @@ const Prof = () => {
           <li className="nav-item"><a href="/">Αρχική σελίδα</a></li>
           <li className="nav-item" style={{ backgroundColor: 'rgb(206, 205, 205)', borderRadius: '7px' }}><a href="/profs">Επαγγελματίες</a></li>
           <li className="nav-item"><a href="/parent">Γονείς</a></li>
-          <li className="nav-item"><a href="/announcements">Ανακοινώσεις</a></li>
+          {/* <li className="nav-item"><a href="/announcements">Ανακοινώσεις</a></li> */}
           <li className="nav-item"><a href="/help">Βοήθεια</a></li>
           {(window.localStorage.length && userData[0]) ?
             <li>
@@ -508,7 +530,7 @@ const Prof = () => {
                     systatikes.map(el => {
                       return (
                         <div>
-                        <button className='box2' style={{ display: 'flex', flexDirection:'column',alignItems: 'center', fontSize:'1rem', padding:'.4rem 0.8rem' }}>
+                        <button className='box2' style={{ display: 'flex', flexDirection:'column',alignItems: 'center', fontSize:'1rem', padding:'.4rem 0.8rem', cursor:'pointer' }}>
                           <img src='icons/email.svg' width='28x' style={{ marginRight: '15px' }} />
                           <span>{el}</span>
                         </button  >
@@ -613,7 +635,7 @@ const Prof = () => {
                   {
                     systatikes.map(el => {
                       return (
-                        <button className='box2' style={{ display: 'flex', flexDirection:'column',alignItems: 'center', fontSize:'1rem', padding:'.4rem 0.8rem' }}>
+                        <button className='box2' style={{ display: 'flex', flexDirection:'column',alignItems: 'center', fontSize:'1rem', padding:'.4rem 0.8rem', cursor:'pointer' }}>
                           <img src='icons/email.svg' width='28x' style={{ marginRight: '15px' }} />
                           <span>{el}</span>
                         </button  >
@@ -716,7 +738,7 @@ const Prof = () => {
                 <h2 style={{ textAlign: 'left', marginTop:'70px'  }}>Πιστοποιητικά υγείας</h2>
                 <p style={{ textAlign: 'left', marginTop:'-15px' }}>Παθολόγος/Γενικός γιατρός</p>
                 <div style={{ width: 'fit-content', cursor:'pointer'}}>
-                  {userData[0].bio_files.pathologos  ?
+                  {userData[0].bio_files && userData[0].bio_files.pathologos  ?
                     <div className='box2' style={{ display: 'flex', alignItems: 'center', width:'auto' }}>
                       <img src='icons/paper_black.svg' width='28px' style={{ marginRight: '8px' }} />
                       <span>{userData[0].bio_files.pathologos }</span>
@@ -730,7 +752,7 @@ const Prof = () => {
                 </div>
                 <p style={{ textAlign: 'left', marginTop:'35px' }}>Δερματολόγος</p>
                 <div style={{ width: 'fit-content', cursor:'pointer'}}>
-                  {userData[0].bio_files.dermatologos ?
+                  {userData[0].bio_files && userData[0].bio_files.dermatologos ?
                     <div className='box2' style={{ display: 'flex', alignItems: 'center', width:'auto' }}>
                       <img src='icons/paper_black.svg' width='28px' style={{ marginRight: '8px' }} />
                       <span>{userData[0].bio_files.dermatologos}</span>
@@ -743,7 +765,7 @@ const Prof = () => {
                 </div>
                 <p style={{ textAlign: 'left', marginTop:'35px' }}>Ψυχικής υγείας</p>
                 <div style={{ width: 'fit-content', cursor:'pointer'}}>
-                  {userData[0].bio_files.psyxiki  ?
+                  {userData[0].bio_files && userData[0].bio_files.psyxiki  ?
                     <div className='box2' style={{ display: 'flex', alignItems: 'center', width:'auto' }}>
                       <img src='icons/paper_black.svg' width='28px' style={{ marginRight: '8px' }} />
                       <span>{userData[0].bio_files.psyxiki }</span>
@@ -758,7 +780,7 @@ const Prof = () => {
                 <br />
                 <h2 style={{ textAlign: 'left', marginTop:'70px'  }}>Πιστοποίηση σε πρώτες βοήθειες</h2>
                 <div style={{ width: 'fit-content', cursor:'pointer'}}>
-                  {userData[0].bio_files.firstAids   ?
+                  {userData[0].bio_files && userData[0].bio_files.firstAids   ?
                     <div className='box2' style={{ display: 'flex', alignItems: 'center', width:'auto' }}>
                       <img src='icons/paper_black.svg' width='28px' style={{ marginRight: '8px' }} />
                       <span>{userData[0].bio_files.firstAids  }</span>
@@ -773,7 +795,7 @@ const Prof = () => {
                 <br />
                 <h2 style={{ textAlign: 'left', marginTop:'70px'  }}>Απόσπασμα ποινικού μητρώου γενικής χρήσης</h2>
                 <div style={{ width: 'fit-content', cursor:'pointer'}}>
-                  {userData[0].bio_files.poiniko    ?
+                  {userData[0].bio_files && userData[0].bio_files.poiniko    ?
                     <div className='box2' style={{ display: 'flex', alignItems: 'center', width:'auto' }}>
                       <img src='icons/paper_black.svg' width='28px' style={{ marginRight: '8px' }} />
                       <span>{userData[0].bio_files.poiniko   }</span>

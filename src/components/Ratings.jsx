@@ -141,7 +141,7 @@ const Ratings = () => {
           <li className="nav-item"><a href="/">Αρχική σελίδα</a></li>
           <li className="nav-item" style={{backgroundColor:'rgb(206, 205, 205)', borderRadius:'7px'}}><a href="/profs">Επαγγελματίες</a></li>
           <li className="nav-item"><a href="/parent">Γονείς</a></li>
-          <li className="nav-item"><a href="/announcements">Ανακοινώσεις</a></li>
+          {/* <li className="nav-item"><a href="/announcements">Ανακοινώσεις</a></li> */}
           <li className="nav-item"><a href="/help">Βοήθεια</a></li>
           {(window.localStorage.length && userData[0]) ?
             <li>
@@ -157,7 +157,7 @@ const Ratings = () => {
                     <li><a href="/profile">Προφίλ</a></li>
                   }
 
-                  <li onClick={handleLogout} style={{color:'#ff0000'}}>Αποσύνδεση</li>
+                  <li onClick={handleLogout} style={{color:'#ff0000', cursor:'pointer'}}>Αποσύνδεση</li>
                 </ul>
               </div>
               : '' }

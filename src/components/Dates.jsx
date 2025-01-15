@@ -106,7 +106,7 @@ const Dates = () => {
           <li class="nav-item"><a href="/">Αρχική σελίδα</a></li>
           <li class="nav-item"><a href="/profs">Επαγγελματίες</a></li>
           <li class="nav-item" style={{backgroundColor:'rgb(206, 205, 205)', borderRadius:'7px'}}><a href="/parent">Γονείς</a></li>
-          <li class="nav-item"><a href="/announcements">Ανακοινώσεις</a></li>
+          {/* <li class="nav-item"><a href="/announcements">Ανακοινώσεις</a></li> */}
           <li class="nav-item"><a href="/help">Βοήθεια</a></li>
           {(window.localStorage.length && userData[0]) ?
             <li>
@@ -169,51 +169,76 @@ const Dates = () => {
           <hr style={{width:'40px',marginTop:'2px',marginLeft:'10px',border:'1px solid  #38bca4'}}/>
           <p>[Ονοματεπώνυμο]</p>
           <form>
-            <b>Ημερομηνία</b>
-            <hr style={{width:'40px',marginTop:'2px',marginLeft:'10px',border:'1px solid  #38bca4'}}/>
-            <select>
-              <option value="" disabled selected>Ημέρα</option> {/* days do not adjust with months */}
-              {days.map((day) => (
-                <option key={day} value={day}>
-                  {day}
-                </option>
-              ))}
-            </select> / 
-            <select style={{marginLeft:'5px'}}>
-              <option value="" disabled selected>Μήνας</option>
-              {months.map((month) => (
-                <option key={month} value={month}>
-                  {month}
-                </option>
-              ))}
-            </select> /
-            <select style={{marginLeft:'5px'}}>
-              <option value="" disabled selected>Έτος</option>
-              <option>2025</option>
-              <option>2026</option>
-            </select>
-            <br />
-            <br />
-            <b>Ώρα</b>
-            <hr style={{width:'40px',marginTop:'2px',marginLeft:'10px',border:'1px solid  #38bca4'}}/>
-            <select>
-              <option value="" disabled selected>Ώρα</option>
-                {hours.map((hour) => (
-                  <option key={hour} value={hour}>
-                    {hour}
+            <span>
+              <b>Ημερομηνία</b>
+              <hr style={{width:'40px',marginTop:'2px',marginLeft:'10px',border:'1px solid  #38bca4'}}/>
+            </span>
+            <div>
+              <select>
+                <option value="" disabled selected>Ημέρα</option> {/* days do not adjust with months */}
+                {days.map((day) => (
+                  <option key={day} value={day}>
+                    {day}
                   </option>
                 ))}
-            </select> : 
-            <select style={{marginLeft:'5px'}}>
-              <option value="" disabled selected>Λεπτά</option>
-              <option>00</option>
-              <option>15</option>
-              <option>30</option>
-              <option>45</option>
-            </select>
-            <br />
-            <br />
-            <b>Τρόπος Συνάντησης</b>
+              </select> / 
+              <select style={{marginLeft:'5px'}}>
+                <option value="" disabled selected>Μήνας</option>
+                {months.map((month) => (
+                  <option key={month} value={month}>
+                    {month}
+                  </option>
+                ))}
+              </select> /
+              <select style={{marginLeft:'5px'}}>
+                <option value="" disabled selected>Έτος</option>
+                <option>2025</option>
+                <option>2026</option>
+              </select>
+            </div>
+            <span>
+              <b>Ώρα</b>
+              <hr style={{width:'40px',marginTop:'2px',marginLeft:'10px',border:'1px solid  #38bca4'}}/>
+            </span>
+            <div>
+              <select>
+                <option value="" disabled selected>Ώρα</option>
+                  {hours.map((hour) => (
+                    <option key={hour} value={hour}>
+                      {hour}
+                    </option>
+                  ))}
+              </select> : 
+              <select style={{marginLeft:'5px'}}>
+                <option value="" disabled selected>Λεπτά</option>
+                <option>00</option>
+                <option>15</option>
+                <option>30</option>
+                <option>45</option>
+              </select>
+            </div>
+            <span>
+              <b>Τρόπος συνάντησης</b>
+              <hr style={{width:'40px',marginTop:'2px',marginLeft:'10px',border:'1px solid  #38bca4'}}/>
+            </span>
+            <div>
+              <label>Φυσική Παρουσία</label>
+              <input style={{marginLeft:'17px'}} type='radio' name='place'></input>
+              <br />
+              <label>Μέσω Zoom</label>
+              <input style={{marginLeft:'56px'}} type='radio' name='place'></input>
+            </div>
+            <span>
+              <b>Τόπος συνάντησης</b>
+              <hr style={{width:'40px',marginTop:'2px',marginLeft:'10px',border:'1px solid  #38bca4'}}/>
+            </span>
+            <input style={{margin:'0px 160px 0px 0px', padding:'10px' }}></input>
+            <span>
+              <b>Σύνδεσμος Zoom</b>
+              <hr style={{width:'40px',marginTop:'2px',marginLeft:'10px',border:'1px solid  #38bca4'}}/>
+            </span>
+            <input style={{margin:'0px 160px 0px 0px', padding:'10px' }}></input>
+            <a className='button-purple-center'>Καταχώρηση</a>
           </form>
         </div>
       </div>

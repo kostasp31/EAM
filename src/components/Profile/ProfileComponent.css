@@ -86,6 +86,16 @@ form {
   font-family: monospace;
   font-size: large;
 }
+
+#sex-field {
+  width: 212px;
+  height: 37px;
+  padding: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  cursor: default;
+}
+
 .input_box {
   display: flex;
   flex-direction: column;

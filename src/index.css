@@ -1061,3 +1061,105 @@ input#selBtn:after
   cursor: pointer;
 }
 
+/* ----------------- PROGRESS TRACKER ------------------*/
+.stepper-wrapper {
+  font-family: Arial;
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.stepper-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+}
+
+.stepper-item::before {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #ccc;
+  width: 100%;
+  top: 20px;
+  left: -50%;
+  z-index: 2;
+}
+
+.stepper-item::after {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #ccc;
+  width: 100%;
+  top: 20px;
+  left: 50%;
+  z-index: 2;
+}
+
+.stepper-item .step-counter {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ccc;
+  margin-bottom: 6px;
+  opacity: 0; /* Start hidden for fade-in */
+  animation: fadeIn 300ms forwards; /* Fade-in animation with 300ms duration */
+  transition: background-color 300ms ease, transform 300ms ease; /* Smooth transitions with 300ms duration */
+}
+
+.stepper-item.active .step-counter {
+  font-weight: bold;
+  background-color: turquoise;
+}
+
+.stepper-item.completed .step-counter {
+  background-color: #38bca4;
+}
+
+.stepper-item.completed::after {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #38bca4;
+  width: 100%;
+  top: 20px;
+  left: 50%;
+  z-index: 3;
+}
+
+.stepper-item:first-child::before {
+  content: none;
+}
+
+.stepper-item:last-child::after {
+  content: none;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px); /* Optional: slight upward movement */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale effect on hover */
+.stepper-item .step-counter:hover {
+  transform: scale(1.1); /* Scale up on hover */
+  background-color: #a0d3c0; /* Optional: change color on hover */
+}
+/* ----------------- PROGRESS TRACKER ------------------*/

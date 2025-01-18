@@ -138,14 +138,15 @@ const Applications = () => {
         <a href="/help" style={{borderBottom:'1px solid white'}}><span style={{verticalAlign:'middle'}}><img src='icons/help.svg' style={{width:'28px', height:'28px', paddingRight:'10px'}} /></span>Βοήθεια</a>
       </div>
 
-      <div style={{ marginTop: "90px", marginLeft: "300px", height:'15px'}}>
-        <a href='/'>Aρχική σελίδα</a>
-        {'  >  '}
-        <a href='/parent'>Γονείς</a>
-        {'  >  Αιτήσεις'}
-      </div>
-      <div>
-      <h1 style={{ marginTop: "40px", marginLeft: "300px"}}>&emsp;Αιτήσεις</h1>
+      <div style={{ paddingLeft: '270px', paddingTop: '90px' }}>
+        <div style={{ height: '15px', alignItems: 'left' }}>
+          <a href='/'>Aρχική σελίδα</a>
+          {'  >  '}
+          <a href='/parent'>Γονείς</a>
+          {'  >  Αιτήσεις'}
+        </div>
+        <h1 style={{ marginTop: "35px" }}>&emsp;Αιτήσεις</h1>
+        <hr style={{ color: 'turquoise', backgroundColor: 'turquoise', border: 'none', height: '4px', width: '90px', float: 'left', marginTop: '-20px', marginLeft: '30px' }} />
       </div>
       
 
@@ -185,18 +186,81 @@ const Applications = () => {
               </button>
             </div>
           </div>
-        : (page === 1) ?
-          <div>
+        : 
+        <div>
+          <div class="stepper-wrapper" style={{marginLeft:'250px'}}>
+            <div class={page === 1 ? "stepper-item active" : "stepper-item completed"}>
+              <div class="step-counter">1</div>
+              <div class="step-name">Βασικά στοιχεία</div>
+            </div>
+            <div class={page > 2 ? "stepper-item completed" : page < 2 ? "stepper-item" : "stepper-item active"}>
+              <div class="step-counter">2</div>
+              <div class="step-name">Τόπος - χρόνος</div>
+            </div>
+            <div class={page > 3 ? "stepper-item completed" : page < 3 ? "stepper-item" : "stepper-item active"}>
+              <div class="step-counter">3</div>
+              <div class="step-name">Συμφωνητικό</div>
+            </div>
+            <div class={page > 4 ? "stepper-item completed" : page < 4 ? "stepper-item" : "stepper-item active"}>
+              <div class="step-counter">4</div>
+              <div class="step-name">Όροι και προϋποθέσεις</div>
+            </div>
+            <div class={page > 5 ? "stepper-item completed" : page < 5 ? "stepper-item" : "stepper-item active"}>
+              <div class="step-counter">5</div>
+              <div class="step-name">Προεπισκόπηση - υποβολή</div>
+            </div>
           </div>
-        : (page === 2) ?
-          <div></div>
-        : (page === 3) ?
-          <div></div>
-        : (page === 4) ?
-          <div></div>
-        : (page === 5) ?
-          <div></div>
-        : <></>
+          <div>
+            {(page === 1) ?
+              <div className='main-content'>
+                <div style={{marginLeft:'250px'}}>
+                  1
+                </div>
+              </div>
+            : (page === 2) ?
+              <div className='main-content'>
+                <div style={{marginLeft:'250px'}}>
+                  2
+                </div>
+              </div>
+            : (page === 3) ?
+              <div className='main-content'>
+                <div style={{marginLeft:'250px'}}>
+                  3
+                </div>
+              </div>
+            : (page === 4) ?
+              <div className='main-content'>
+                <div style={{marginLeft:'250px'}}>
+                  4
+                </div>
+              </div>
+            : (page === 5) ?
+              <div className='main-content'>
+                <div style={{marginLeft:'250px'}}>
+                  5
+                </div>
+              </div>
+            : <></>
+            }
+          </div>
+          <div style={{width:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
+            <div style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:'100px', gap:'40px', marginLeft:'250px'}}>
+              <div style={{ width: 'fit-content'}}>
+                <button className='button-40' style={{ display: 'flex', alignItems: 'center' }} onClick={() => {setPage(page-1)}}>
+                  <img src='/icons/left_arrow.svg' width='28px' style={{ marginRight: '8px' }} />
+                  <span>Προηγούμενο</span>
+                </button>
+              </div>
+              <div style={{ width: 'fit-content'}}>
+                <button disabled={page>4} className='button-40' style={{ display: 'flex', alignItems: 'center', backgroundColor:'#ffffff', color:'#000000', border: '2px solid #111827' }} onClick={() => {setPage(page+1)}}>
+                  <span style={{marginLeft:'21px'}}>Επόμενο</span>
+                  <img src='/icons/right_arrow.svg' width='28px' style={{ marginLeft: '8px', marginRight:'21px' }} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       :
         (isProf === 'professional') ?
           <div className='main-content'>

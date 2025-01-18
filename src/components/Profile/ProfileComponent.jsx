@@ -233,7 +233,7 @@ export default function ProfileComponent({user_data, userId,notif, reload, setRe
             {!edit ?
             <div style={{ width: 'fit-content', marginLeft:'auto', marginRight:'auto'}} id="edit-button">
               <button className='button-40' style={{ display: 'flex', alignItems: 'center' }} onClick={(e) => {e.preventDefault(); setEdit(!edit)}}>
-                <img src='icons/pencil_white.svg' width='28px' style={{ marginRight: '8px' }} />
+                <img src='/icons/pencil_white.svg' width='28px' style={{ marginRight: '8px' }} />
                 <span>Επεξεργασία</span>
               </button>
             </div>
@@ -242,7 +242,7 @@ export default function ProfileComponent({user_data, userId,notif, reload, setRe
             <div style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:'50px', gap:'40px' }}>
               <div style={{ width: 'fit-content'}}>
                 <button className='button-40' style={{ display: 'flex', alignItems: 'center' }} onClick={(e) => {e.preventDefault(); submitChanges()}}>
-                  <img src='icons/save.svg' width='28px' style={{ marginRight: '8px' }} />
+                  <img src='/icons/save.svg' width='28px' style={{ marginRight: '8px' }} />
                   <span>Αποθήκευση</span>
                 </button>
               </div>
@@ -265,7 +265,7 @@ export default function ProfileComponent({user_data, userId,notif, reload, setRe
                     setCity(user_data.city);
                     setArea(user_data.area);
                   }}>
-                  <img src='icons/cancel.svg' width='28px' style={{ marginRight: '8px' }} />
+                  <img src='/icons/cancel.svg' width='28px' style={{ marginRight: '8px' }} />
                   <span>Ακύρωση</span>
                 </button>
               </div>

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { useState } from "react"
 
 import Register from './components/Register'
 import Login from './components/Login'
@@ -26,9 +27,16 @@ import Dates_profs from "./components/Dates_profs"
 import Notifications_Profs from "./components/Notifications_profs"
 import Profile_Profs from "./components/Profile_profs"
 import Ratings from "./components/Ratings"
+import Public_Profile from "./components/Public_Profile"
 
 
 const App = () => {
+  const [filters, setFilters] = useState({
+    hours: {},
+    dhmos: ''
+  })
+
+  const [selectedDate, setSelectedDate] = useState([])
 
   return (
     <div className="App">
@@ -38,10 +46,10 @@ const App = () => {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="parent" element={<Parent />} />
-          <Route path="search" element={<Search />} />
+          <Route path="search" element={<Search filters={filters} setFilters={setFilters} selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>} />
           <Route path="applications" element={<Applications />} />
           <Route path="colabs" element={<Colabs />} />
-          <Route path="dates" element={<Dates />} />
+          <Route path="dates" element={<Dates selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>} />
           <Route path="help" element={<Help />} />
           <Route path="help/conditions" element={<Conditions />} />
           <Route path="help/FAQ_parents" element={<FAQ_Parents />} />
@@ -57,8 +65,10 @@ const App = () => {
           <Route path="profile_profs" element={<Profile_Profs />} />
           <Route path="ratings" element={<Ratings />} />
 
+          <Route path="search/profile/:id" element={<Public_Profile selectedDate={selectedDate} setSelectedDate={setSelectedDate} />} />
 
-          <Route path="/" element={<Root />} />
+
+          <Route path="/" element={<Root filters={filters} setFilters={setFilters}/>} />
           
         </Routes>
       </BrowserRouter>

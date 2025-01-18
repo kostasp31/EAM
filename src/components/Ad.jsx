@@ -24,7 +24,22 @@ const Ad = () => {
   const [isProf, setIsProf] = useState('')
   const [editing, setEditing] = useState(false)
   
-  const [hours, setHours] = useState({})
+  const [hours, setHours] = useState({
+    "friday-end": 15,
+    "friday-start": 8,
+    "monday-end": 16,
+    "monday-start": 8,
+    "saturday-end": -1,
+    "saturday-start": -1,
+    "sunday-end": -1,
+    "sunday-start": -1,
+    "thursday-end": 16,
+    "thursday-start": 8,
+    "tuesday-end": 16,
+    "tuesday-start": 8,
+    "wednesday-end": 16,
+    "wednesday-start": 8
+  })
   const [info, setInfo] = useState('')
   const [loc, setLoc] = useState(null)
   const [jobType, setJobType] = useState(null)

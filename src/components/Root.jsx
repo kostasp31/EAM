@@ -18,12 +18,34 @@ import Footer from './Footer'
 
 import ScrollButton from './ScrollButton'
 
-const Root = () => {
+import Popup from 'reactjs-popup'
+import TimePicker from './TimePicker.jsx'
+
+const Root = ({filters, setFilters}) => {
   const navigate = useNavigate()
   const [userData, setUserData] = useState([])
   const [userId, setUserId] = useState(null)
   const [isProf, setIsProf] = useState('')
   const [clickedProfile, setClickedProfile] = useState(false)
+  const [filledDate, setFillDate] = useState(false)
+
+  const [hours, setHours] = useState({
+    "friday-end": 15,
+    "friday-start": 8,
+    "monday-end": 16,
+    "monday-start": 8,
+    "saturday-end": -1,
+    "saturday-start": -1,
+    "sunday-end": -1,
+    "sunday-start": -1,
+    "thursday-end": 16,
+    "thursday-start": 8,
+    "tuesday-end": 16,
+    "tuesday-start": 8,
+    "wednesday-end": 16,
+    "wednesday-start": 8
+  })
+  const [dhmos, setDhmos] = useState('')
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
@@ -99,6 +121,17 @@ const Root = () => {
     dots: true,
   }
 
+  const searchDada = () => {
+    let temp = structuredClone(filters)
+    temp.hours = hours
+    temp.dhmos = dhmos
+
+    console.log(temp)
+
+    setFilters(temp)
+    navigate('/search')
+  }
+
   return (
     <div>
       <nav className="navbar" id='top'>
@@ -144,6 +177,8 @@ const Root = () => {
       <div className='aboveFold'>
         <div style={{visibility:'hidden'}}>1</div>
 
+        {/* <h1 style={{marginTop:'100px', marginLeft:'100px'}}>Ntantades feat Kai Cenat</h1> */}
+
         <div className='main-elements'>
           <div className='personas-buttons'>
             <div style={{display:'flex', flexDirection:'row', gap:'5px'}}>
@@ -152,27 +187,107 @@ const Root = () => {
             </div>
           </div>
           <div className='searchbar-main'>
-            <div className='searchbar-main-icon' style={{marginLeft:'20px'}}>
-              <img src='/icons/calendar_24.png' />
-            </div>
-            <div style={{display:'flex', alignItems:'center'}}>
+    
+
+            <Popup
+                trigger={
+                  <div className='searchbar-main-icon' style={{marginLeft:'20px'}}>
+                    <img src='/icons/calendar_24.png' />
+                  </div>
+                }
+                modal
+                nested
+                style={{ marginLeft: '250px', width: '500px' }}
+              >
+                {close => (
+                  <div className="modal">
+                    <button className="close" onClick={close}>
+                      <img src='icons/cancel.svg' />
+                    </button>
+                    <div className="header1">Συμπληρώστε την επιθυμητή διαθεσιμότητα</div>
+                    <TimePicker
+                      hours={hours}
+                      setHours={setHours}
+                    />
+                    <div className="actions">
+
+                      <button
+                        style={{ marginTop: '20px', marginLeft: 'auto', marginRight: '30px' }}
+                        className="persona1-button"
+                        onClick={() => {
+                          setFillDate(true)
+                          close()
+                        }}
+                      >
+                        Εφαρμογή
+                      </button>
+                      <button
+                        style={{ marginTop: '20px', marginLeft: 'auto', marginRight: 'auto' }}
+                        className="persona2-button"
+                        onClick={() => {
+                          console.log('cancel')
+                          setHours({
+                            "friday-end": 16,
+                            "friday-start": 8,
+                            "monday-end": 16,
+                            "monday-start": 8,
+                            "saturday-end": -1,
+                            "saturday-start": -1,
+                            "sunday-end": -1,
+                            "sunday-start": -1,
+                            "thursday-end": 16,
+                            "thursday-start": 8,
+                            "tuesday-end": 16,
+                            "tuesday-start": 8,
+                            "wednesday-end": 16,
+                            "wednesday-start": 8
+                          })
+                          close()
+                        }}
+                      >
+                        Ακύρωση
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </Popup>
+
+            <div style={{display:'flex', alignItems:'center', color:'rgba(0, 0, 0, 1.0)'}}>
               <input
                 className='searchbar-main-input'
                 placeholder='Ημέρες / Ώρες'
+                disabled="disabled"
+                value={filledDate ? 'Επιλέξατε διαθεσιμότητα' : ''}
               />
             </div>
             <div className="verticalLine">
             </div>
-            <div className='searchbar-main-icon'>
+            <div className='searchbar-main-icon' >
               <img src='/icons/location_32.png' />
             </div>
-            <div style={{display:'flex', alignItems:'center'}}>
-              <input
-                className='searchbar-main-input'
-                placeholder='Τοποθεσία'
-              />
+            <div style={{display:'flex', alignItems:'center'}} className='searchbar-main-input'>
+            <select 
+            onChange={(e) => {setDhmos(e.target.value)}}
+            name="cars"
+            id="sex-field"
+            style={{
+              backgroundColor: 'transparent',
+              // border: 'none',
+              fontSize: '1.125rem',
+              color: '#535353',
+              fontWeight: '600',
+              padding: '0px 10px'
+            }}>
+              <option value="">Επιλέξτε Δήμο...</option>
+              <option value="Athena">Δήμος Αθηναίων</option>
+              <option value="Aigina">Δήμος Αίγινας</option>
+              <option value="Peristeri">Δήμος Περιστερίου</option>
+              <option value="Galatsi">Δήμος Γαλατσίου</option>
+              <option value="Zografou">Δήμος Ζωγράφου</option>
+              <option value="Irakleiou">Δήμος Ηρακλείου</option>
+            </select>
             </div>
-            <div className='searchbar-main-icon' style={{marginRight:'20px'}}>
+            <div className='searchbar-main-icon' style={{marginLeft:'70px'}} onClick={searchDada}>
               <img src='/icons/search_24.png' />
             </div>
           </div>

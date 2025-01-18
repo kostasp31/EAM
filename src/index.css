@@ -351,6 +351,8 @@ nav {
   padding: 10px;
 
   width: 750px;
+
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .searchbar-main-icon {
@@ -968,6 +970,9 @@ input#selBtn:after
   display: flex;
   flex-direction: column;
 
+  width: 700px;
+  /* margin-left: 100px; */
+
 }
 
 .close {
@@ -997,9 +1002,12 @@ input#selBtn:after
 }
 
 .actions {
-  display: flex;
+  /* display: flex;
   justify-content: space-between;
-  width:600px;
+  width:600px; */
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 
@@ -1042,7 +1050,6 @@ input#selBtn:after
   font-size: 1.125rem;
   font-weight: 600;
   margin-left: auto;
-  margin-right: auto;
 }
 
 .button-41:hover {
@@ -1050,4 +1057,7 @@ input#selBtn:after
 }
 /* ------------------------------ POPUP ----------------------*/
 
+.clickable {
+  cursor: pointer;
+}
 

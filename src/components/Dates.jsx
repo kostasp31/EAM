@@ -11,7 +11,9 @@ import { ReactNotifications, Store } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 import 'animate.css/animate.min.css'
 
-const Date = ({date, userData, userId, triggerNotif, submittedDate, setSubmittedDate}) => {
+const Date = ({date, userData, userId, triggerNotif, submittedDate, setSubmittedDate, setSelectedDate}) => {
+  const navigate = useNavigate()
+
   const rejectColab = async () => {
     try {
       // Create a query against the collection
@@ -81,6 +83,79 @@ const Date = ({date, userData, userId, triggerNotif, submittedDate, setSubmitted
     }  
   }
 
+  const acceptColab = async () => {
+    try {
+      // Create a query against the collection
+      const q = query(collection(FIREBASE_DB, 'user_data'), where('uid', '==', userData[0].uid))
+      const querySnapshot = await getDocs(q)
+      if (!querySnapshot.empty) {
+        const docRef = doc(FIREBASE_DB, 'user_data', querySnapshot.docs[0].id)
+        console.log('udata:', userData[0])
+
+        let temp = userData[0].dates
+        for (let i=0; i<temp.length; i++) {
+          if (temp[i].prof_id === date.prof_id) {
+            temp[i].state = 'completed'
+          }
+        }
+        
+        await updateDoc(docRef, {
+          dates: temp
+        })
+
+      } else {
+        console.log("No such document found with the specified uid!")
+      }
+    } catch (error) {
+      console.error("Error updating document: ", error)
+    }
+
+    try {
+      // Create a query against the collection
+      const q = query(collection(FIREBASE_DB, 'user_data'), where('uid', '==', date.prof_id))
+      const querySnapshot = await getDocs(q)
+      if (!querySnapshot.empty) {
+        const prof_data = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }))
+
+        const docRef = doc(FIREBASE_DB, 'user_data', querySnapshot.docs[0].id)
+
+        let oldDates = prof_data[0].dates
+        let newDates = oldDates
+        if (!oldDates)
+          newDates = []
+
+        let temp = prof_data[0].dates
+        for (let i=0; i<temp.length; i++) {
+          if (temp[i].parent_id === userData[0].uid) {
+            temp[i].state = 'completed'
+          }
+        }
+
+
+        // Update the document with the new value
+        await updateDoc(docRef, {
+          dates: temp
+        })
+
+        triggerNotif('success', 'Επιτυχία', 'Η κατάσταση του ραντεβού ενημερώθηκε με επιτυχία')
+        setSubmittedDate(!submittedDate)
+
+        console.log("Document updated successfully")
+      } else {
+        console.log("No such document found with the specified uid!")
+      }
+    } catch (error) {
+      console.error("Error updating document: ", error)
+    }  
+
+  
+    setSelectedDate(date)
+    navigate('/applications')
+  }
+
   return (
     <div className='box' style={{backgroundColor:'lightgray', border:'0', boxShadow:'3px 3px 1px #38bca4', padding:'15px', marginBottom:'20px'}}>
       <h3 style={{marginTop:'0px'}}>Ραντεβού με {date.prof_name}</h3>
@@ -98,7 +173,7 @@ const Date = ({date, userData, userId, triggerNotif, submittedDate, setSubmitted
           <div style={{width:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
             <div style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:'20px', gap:'40px' }}>
               <div style={{ width: 'fit-content'}}>
-                <button className='button-40' style={{ display: 'flex', alignItems: 'center', padding:'7px 10px' }}>
+                <button className='button-40' style={{ display: 'flex', alignItems: 'center', padding:'7px 10px' }} onClick={acceptColab}>
                   <img src='/icons/paper.svg' width='28px' style={{ marginRight: '8px' }} />
                   <span>Αίτηση συνεργασίας</span>
                 </button>
@@ -439,7 +514,7 @@ const Dates = ({selectedDate, setSelectedDate}) => {
           <h3 style={{textAlign:'center'}}>Τα ραντεβού σας</h3>
           { userData[0] && userData[0].dates ?
               userData[0].dates.map((date) => {
-                return (<Date date={date} userData={userData} userId={userId} triggerNotif={triggerNotif} submittedDate={submittedDate} setSubmittedDate={setSubmittedDate}/>)
+                return (<Date date={date} userData={userData} userId={userId} triggerNotif={triggerNotif} submittedDate={submittedDate} setSubmittedDate={setSubmittedDate} setSelectedDate={setSelectedDate}/>)
               })
           :
               <div>

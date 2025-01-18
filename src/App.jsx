@@ -47,7 +47,7 @@ const App = () => {
           <Route path="register" element={<Register />} />
           <Route path="parent" element={<Parent />} />
           <Route path="search" element={<Search filters={filters} setFilters={setFilters} selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>} />
-          <Route path="applications" element={<Applications />} />
+          <Route path="applications" element={<Applications selectedDate={selectedDate}/>} />
           <Route path="colabs" element={<Colabs />} />
           <Route path="dates" element={<Dates selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>} />
           <Route path="help" element={<Help />} />

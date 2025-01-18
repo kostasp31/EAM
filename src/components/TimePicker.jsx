@@ -98,7 +98,7 @@ const TimePicker = ({hours, setHours}) => {
 
 
   return (
-    <div style={{display:'flex', flexDirection:'column', justifyContent:'center'}}>
+    <div style={{display:'flex', flexDirection:'column', justifyContent:'center', width:'650px'}}>
     <div>
       <TimePickerDay 
         day={'Δευτέρα'}

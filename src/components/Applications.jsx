@@ -11,14 +11,76 @@ import { ReactNotifications, Store } from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 import 'animate.css/animate.min.css'
 
-const Applications = () => {
+import TimePicker from './TimePicker.jsx'
+import TimePickerDummy from './TimePicker_Dummy.jsx'
+
+const Applications = ({selectedDate}) => {
   const navigate = useNavigate()
   const [userData, setUserData] = useState([])
   const [userId, setUserId] = useState(null)
   const [isProf, setIsProf] = useState('')
   const [clickedProfile, setClickedProfile] = useState(false)
 
-  const [page, setPage] = useState(0)
+  const [age, setAge] = useState('')
+  const [gender, setGender] = useState('')
+  const [AMKA, setAMKA] = useState('')
+  const [phone, setPhone] = useState('')
+  const [address, setAddress] = useState('')
+  const [tk, setTk] = useState('')
+  const [city, setCity] = useState('')
+  const [area, setArea] = useState('')
+
+  const [childName, setChildName] = useState('')
+  const [childSurname, setChildSurname] = useState('')
+  const [childAge, setChildaAge] = useState('')
+  const [childGender, setChildGender] = useState('')
+  const [childAMKA, setChildAMKA] = useState('')
+
+  const [ageError, setAgeError] = useState(false)
+  const [genderError, setGenderError] = useState(false)
+  const [AMKAError, setAMKAError] = useState(false)
+  const [phoneError, setPhoneError] = useState(false)
+  const [addressError, setAddressError] = useState(false)
+  const [tkError, setTkError] = useState(false)
+  const [cityError, setCityError] = useState(false)
+  const [areaError, setAreaError] = useState(false)
+
+  const [childnameError, setChildnameError] = useState(false)
+  const [childsurnameError, setChildsurnameError] = useState(false)
+  const [childgenderError, setChildgenderError] = useState(false)
+  const [childageError, setChildageError] = useState(false)
+  const [childAMKAError, setChildAMKAError] = useState(false)
+
+  const [dilosi, setDilosi] = useState(false)
+  const [apodoxi, setApodoxi] = useState(false)
+
+  const [place, setPlace] = useState('')
+  const [hours, setHours] = useState({
+    "friday-end": 15,
+    "friday-start": 8,
+    "monday-end": 16,
+    "monday-start": 8,
+    "saturday-end": -1,
+    "saturday-start": -1,
+    "sunday-end": -1,
+    "sunday-start": -1,
+    "thursday-end": 16,
+    "thursday-start": 8,
+    "tuesday-end": 16,
+    "tuesday-start": 8,
+    "wednesday-end": 16,
+    "wednesday-start": 8
+  })
+
+  const [aggrement, setAggrement] = useState('')
+  const [startDay, setStartDay] = useState('')
+  const [startMonth, setStartMonth] = useState('')
+  const [startYear, setStartYear] = useState('')
+  const [endDay, setEndDay] = useState('')
+  const [endMonth, setEndMonth] = useState('')
+  const [endYear, setEndYear] = useState('')
+
+  const [page, setPage] = useState(selectedDate.day ? 1 : 0)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
@@ -86,8 +148,140 @@ const Applications = () => {
     )
   }
 
+  const handleAggrement = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+      setAggrement(file.name)
+    } else {
+      setAggrement('')
+    }
+  }
+
+  const forwardPage = () => {
+    let failed = false
+    if (page === 1) {
+      if (!(userData[0].age || age)) {
+        triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε την ηλικία σας")
+        setAgeError(true)
+        failed = true
+      }
+      console.log('AMKE', userData[0].AMKA, AMKA)
+      if (!(userData[0].ΑΜΚΑ || AMKA)) {
+        triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε το ΑΜΚΑ σας")
+        setAMKAError(true)
+        failed = true
+      }
+      if (!(userData[0].phone || phone)) {
+        triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε το τηλέφωνό σας")
+        setPhoneError(true)
+        failed = true
+      }
+      if (!(userData[0].gender || gender)) {
+        triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε το φύλο σας")
+        setGenderError(true)
+        failed = true
+      }
+      if (!(userData[0].address || address)) {
+        triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε τον δήμο σας")
+        setAddressError(true)
+        failed = true
+      }
+      if (!(userData[0].tk || tk)) {
+        triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε τον ταχυδρομικό σας κώδικα")
+        setTkError(true)
+        failed = true
+      }
+      if (!(userData[0].city || city)) {
+        triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε την πόλη σας")
+        setCityError(true)
+        failed = true
+      }
+      if (!(userData[0].area || area)) {
+        triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε την περιοχή σας")
+        setAreaError(true)
+        failed = true
+      }
+      
+      if (!childAMKA) {
+        triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε το ΑΜΚΑ του παιδιού σας")
+        setChildAMKAError(true)
+        failed = true
+      }
+      if (!childAge) {
+        setChildageError(true)
+        triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε την ηλικία του παιδιού σας")
+        failed = true
+      }
+      if (!childGender) {
+        setChildgenderError(true)
+        triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε το φύλο του παιδιού σας")
+        failed = true
+      }
+      if (!childName) {
+        setChildnameError(true)
+        triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε το όνομα του παιδιού σας")
+        failed = true
+      }
+      if (!childSurname) {
+        setChildsurnameError(true)
+        triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε το επώνυμο του παιδιού σας")
+        failed = true
+      }
+      
+      if (failed)
+        return
+
+    }
+    if (page === 3) {
+      if (!aggrement) {
+        triggerNotif('danger', 'Σφάλμα', 'Ανεβάστε το συμφωνητικό συνεργασίας')
+        failed= true
+      }
+      if (!startDay || !startMonth || !startYear || !endDay || !endMonth || !endYear) {
+        triggerNotif('danger', 'Σφάλμα', 'Ορίστε ημερομηνίες έναρξης και τερματισμού συνεργασίας')
+        failed= true
+      }
+      if (failed) {
+        return
+      }
+    }
+    if (page === 2) {
+      if (!hours || !place) {
+        triggerNotif('danger', 'Σφάλμα', 'Ορίστε την τοποθεσία εργασίας')
+        return
+      }
+    }
+    if (page === 4) {
+      if (!(dilosi && apodoxi)) {
+        triggerNotif('danger', 'Σφάλμα', 'Πρέπει να αποδεχτείτε τους όρους')
+        return
+      }
+    }
+    setPage(page+1)
+  }
+
+  const triggerNotif = (type, title, content) => {
+    Store.addNotification({
+      title: title,
+      message: content,
+      type: type,
+      insert: "top",
+      container: "bottom-right",
+      animationIn: ["animate__animated", "animate__bounceIn"],
+      animationOut: ["animate__animated", "animate__bounceOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true
+      }
+    });
+  }
+
+  const days = Array.from({length:31}, (_,i) => i + 1)
+  const months = Array.from({length:12}, (_,i) => i + 1)
+
   return (    
     <div>
+      <ReactNotifications />
       <nav className="navbar" style={{position:'fixed', top:'0'}}>
         <a href="/" className="logo">
           <img src="/logos/gov_gr_logo.svg" alt="GOV logo" />
@@ -190,62 +384,472 @@ const Applications = () => {
         <div>
           <div class="stepper-wrapper" style={{marginLeft:'250px'}}>
             <div class={page === 1 ? "stepper-item active" : "stepper-item completed"}>
-              <div class="step-counter">1</div>
+              <div class="step-counter" onClick={() => {if (page > 1) setPage(1)}}>1</div>
               <div class="step-name">Βασικά στοιχεία</div>
             </div>
             <div class={page > 2 ? "stepper-item completed" : page < 2 ? "stepper-item" : "stepper-item active"}>
-              <div class="step-counter">2</div>
+              <div class="step-counter" onClick={() => {if (page > 2) setPage(2)}}>2</div>
               <div class="step-name">Τόπος - χρόνος</div>
             </div>
             <div class={page > 3 ? "stepper-item completed" : page < 3 ? "stepper-item" : "stepper-item active"}>
-              <div class="step-counter">3</div>
+              <div class="step-counter" onClick={() => {if (page > 3) setPage(3)}}>3</div>
               <div class="step-name">Συμφωνητικό</div>
             </div>
             <div class={page > 4 ? "stepper-item completed" : page < 4 ? "stepper-item" : "stepper-item active"}>
-              <div class="step-counter">4</div>
+              <div class="step-counter" onClick={() => {if (page > 4) setPage(4)}}>4</div>
               <div class="step-name">Όροι και προϋποθέσεις</div>
             </div>
             <div class={page > 5 ? "stepper-item completed" : page < 5 ? "stepper-item" : "stepper-item active"}>
-              <div class="step-counter">5</div>
+              <div class="step-counter" onClick={() => {if (page > 5) setPage(5)}}>5</div>
               <div class="step-name">Προεπισκόπηση - υποβολή</div>
             </div>
           </div>
           <div>
             {(page === 1) ?
-              <div className='main-content'>
+              <div className='main-content' style={{marginTop:'-80px'}}>
                 <div style={{marginLeft:'250px'}}>
-                  1
+                <div style={{marginLeft:'auto', marginRight:'auto', width:'fit-content', fontSize:'25px', fontWeight:'700', marginBottom:'50px'}}>Στοιχεία γονέα</div>
+                <form style={{width:'fit-content', marginLeft:'auto', marginRight:'auto', marginTop:'50px'}}>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="name-field">Όνομα</label>
+                      <input type="text" id="name-field" value={userData[0].name} disabled/>
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="surname-field">Επώνυμο</label>
+                      <input type="text" id="surname-field" value={userData[0].surname} disabled/>
+                    </div>
+                  </div>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="age-field">Ηλικία</label>
+                      <input type="number" id="age-field" disabled={userData[0].age} value={age || userData[0].age} onChange={(e) => {setAge(e.target.value); setAgeError(false)}} style={{borderColor: ageError ? '#ff0000' : ''}}/>
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="sex-field">Φύλο</label>
+                      <select name="cars" id="sex-field" disabled={userData[0].gender} value={gender || userData[0].gender} onChange={(e) => {setGender(e.target.value); setGenderError(false)}} style={{borderColor: genderError ? '#ff0000' : ''}} >
+                        <option value="" hidden></option>
+                        <option value="male">Άντρας</option>
+                        <option value="female">Γυναίκα</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="amka-field">ΑΜΚΑ</label>
+                      <input type="number" id="amka-field" disabled={userData[0].AMKA} value={AMKA || userData[0].AMKA} onChange={(e) => {setAMKA(e.target.value); setAMKAError(false)}} style={{borderColor: AMKAError ? '#ff0000' : ''}}/>
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="afm-field">ΑΦΜ</label>
+                      <input type="number" id="afm-field" disabled value={userData[0].AFM} />
+                    </div>
+                  </div>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="email-field">Email</label>
+                      <input type="email" id="email-field" disabled value={userData[0].email}/>
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="phone-field">Τηλέφωνο</label>
+                      <input type="phone" id="phone-field"  disabled={userData[0].phone} value={phone || userData[0].phone} onChange={(e) => {setPhone(e.target.value); setPhoneError(false)}} style={{borderColor: phoneError ? '#ff0000' : ''}}/>
+                    </div>
+                  </div>
+                  <div className="input-row">
+
+                    <div className="input_box">
+                      <label htmlFor="address-field">Δήμος</label>
+                      <select name="cars" id="sex-field"  disabled={userData[0].address} value={address || userData[0].address} onChange={(e) => {setAddress(e.target.value); setAddressError(false)}} style={{borderColor: addressError ? '#ff0000' : ''}}>
+                        <option value=""  hidden></option>
+                        <option value="Athena">Δήμος Αθηναίων</option>
+                        <option value="Aigina">Δήμος Αίγινας</option>
+                        <option value="Peristeri">Δήμος Περιστερίου</option>
+                        <option value="Galatsi">Δήμος Γαλατσίου</option>
+                        <option value="Zografou">Δήμος Ζωγράφου</option>
+                        <option value="Irakleiou">Δήμος Ηρακλείου</option>
+                      </select>
+                    </div>
+
+                    <div className="input_box">
+                      <label htmlFor="taxidromikos-field">Ταχυδρομικός Κώδικας</label>
+                      <input type="text" id="taxidromikos-field" disabled={userData[0].tk} value={tk || userData[0].tk} onChange={(e) => {setTk(e.target.value); setTkError(false)}} style={{borderColor: tkError ? '#ff0000' : ''}}/>
+                    </div>
+                  </div>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="city-field">Πόλη</label>
+                      <input type="text" id="city-field"  disabled={userData[0].city} value={city || userData[0].city} onChange={(e) => {setCity(e.target.value); setCityError(false)}} style={{borderColor: cityError ? '#ff0000' : ''}}/>
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="area-field">Περιοχή</label>
+                      <input type="text" id="area-field"  disabled={userData[0].area} value={area || userData[0].area} onChange={(e) => {setArea(e.target.value); setAreaError(false)}} style={{borderColor: areaError ? '#ff0000' : ''}}/>
+                    </div>
+                  </div>
+                  <div className="last-row">
+
+                  </div>
+                </form>
+
+                <div style={{marginLeft:'auto', marginRight:'auto', width:'fit-content', fontSize:'25px', fontWeight:'700', marginBottom:'30px'}}>Στοιχεία παιδιού</div>
+                <form style={{width:'fit-content', marginLeft:'auto', marginRight:'auto', marginTop:'50px'}}>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="name-field">Όνομα</label>
+                      <input type="text" id="name-field" value={childName} onChange={(e) => {setChildName(e.target.value); setChildnameError(false)}} style={{borderColor: childnameError ? '#ff0000' : ''}}/>
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="surname-field">Επώνυμο</label>
+                      <input type="text" id="surname-field" value={childSurname} onChange={(e) => {setChildSurname(e.target.value); setChildsurnameError(false)}} style={{borderColor: childsurnameError ? '#ff0000' : ''}}/>
+                    </div>
+                  </div>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="age-field">Ηλικία</label>
+                      <input type="number" id="age-field" value={childAge} onChange={(e) => {setChildaAge(e.target.value); setChildageError(false)}} style={{borderColor: childageError ? '#ff0000' : ''}}/>
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="sex-field">Φύλο</label>
+                      <select name="cars" id="sex-field" value={childGender} onChange={(e) => {setChildGender(e.target.value); setChildgenderError(false)}} style={{borderColor: childgenderError ? '#ff0000' : ''}}>
+                        <option value="" disabled hidden></option>
+                        <option value="male">Άντρας</option>
+                        <option value="female">Γυναίκα</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="input-row">
+                    <div className="input_box" style={{marginLeft:'auto', marginRight:'auto', width:'fit-content'}}>
+                      <label htmlFor="amka-field">ΑΜΚΑ</label>
+                      <input type="number" id="amka-field" value={childAMKA} onChange={(e) => {setChildAMKA(e.target.value); setChildAMKAError(false)}} style={{borderColor: childAMKAError ? '#ff0000' : ''}}/>
+                    </div>
+                  </div>
+                </form>
                 </div>
               </div>
             : (page === 2) ?
               <div className='main-content'>
                 <div style={{marginLeft:'250px'}}>
-                  2
+                  <h2>Ώρες απασχόλησης</h2>
+                  <TimePicker hours={hours} setHours={setHours} />
+                  <br />
+                  <h2>Τοποθεσία απασχόλησης</h2>
+                  <div className='pass-input-container' style={{display:'flex'}}>
+                    <img style={{width:'42px'}} src='/icons/location_64.png'/>
+                    <input
+                      className='form-input'
+                      style={{}}
+                      placeholder='Διεύθυνση και αριθμός'
+                      value={place}
+                      onChange={(e) => {
+                        setPlace(e.target.value)
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             : (page === 3) ?
               <div className='main-content'>
                 <div style={{marginLeft:'250px'}}>
-                  3
+                  <h1 style={{ textAlign: 'center', marginTop:'70px'  }}>Συμφωνητικό συνεργασίας</h1>
+                  <p style={{ textAlign: 'center', marginTop:'-15px' }}>Ανεβάστε το συμφωνητικό για αποδοχή από τον επαγγελματία</p>
+                  <label for="images" class="drop-container" id="dropcontainer">
+                    <span class="drop-title">Σύρτε αρχεία εδώ</span>
+                    ή
+                    <input type="file" onChange={handleAggrement} />
+                    <span class="file-message" id="fileMessage" style={{position:'absolute', marginTop:'65px', marginLeft:'30px'}}>{aggrement}</span>
+                  </label>
+                </div>
+                <br />
+                <div style={{marginLeft:'250px'}}>
+                  <h2 style={{ textAlign: 'center'}}>Ισχύς συνεργασίας</h2>
+                  <div style={{display:'flex'}}>
+                    <div>
+                      <h4>Από</h4>
+                      <select onChange={(e) => setStartDay(e.target.value)} value={startDay}>
+                        <option value="" disabled selected>Ημέρα</option> {/* days do not adjust with months */}
+                        {days.map((day) => (
+                          <option key={day} value={day}>
+                            {day}
+                          </option>
+                        ))}
+                      </select> / 
+                      <select style={{marginLeft:'5px'}} onChange={(e) => setStartMonth(e.target.value)} value={startMonth}>
+                        <option value="" disabled selected>Μήνας</option>
+                        {months.map((month) => (
+                          <option key={month} value={month}>
+                            {month}
+                          </option>
+                        ))}
+                      </select> /
+                      <select style={{marginLeft:'5px'}} onChange={(e) => setStartYear(e.target.value)} value={startYear}>
+                        <option value="" disabled selected>Έτος</option>
+                        <option>2025</option>
+                        <option>2026</option>
+                      </select>
+                    </div>
+                    <div style={{marginLeft:'15px'}}>
+                      <h4>Μέχρι</h4>
+                      <select onChange={(e) => setEndDay(e.target.value)} value={endDay}>
+                        <option value="" disabled selected>Ημέρα</option> {/* days do not adjust with months */}
+                        {days.map((day) => (
+                          <option key={day} value={day}>
+                            {day}
+                          </option>
+                        ))}
+                      </select> / 
+                      <select style={{marginLeft:'5px'}} onChange={(e) => setEndMonth(e.target.value)} value={endMonth}>
+                        <option value="" disabled selected>Μήνας</option>
+                        {months.map((month) => (
+                          <option key={month} value={month}>
+                            {month}
+                          </option>
+                        ))}
+                      </select> /
+                      <select style={{marginLeft:'5px'}} onChange={(e) => setEndYear(e.target.value)} value={endYear}>
+                        <option value="" disabled selected>Έτος</option>
+                        <option>2025</option>
+                        <option>2026</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
             : (page === 4) ?
               <div className='main-content'>
                 <div style={{marginLeft:'250px'}}>
-                  4
+                <div style={{marginLeft:'auto', marginRight:'auto', width:'fit-content', fontSize:'25px', fontWeight:'700', marginBottom:'50px', marginTop:'-100px'}}>Όροι και προϋποθέσεις</div>
+                  <div>
+                    <div style={{marginBottom:'50px'}} onClick={() => setDilosi(!dilosi)} className="clickable">
+                      <input type="checkbox" checked={dilosi}/> <span>Δηλώνω υπεύθυνα ότι επιβεβαιώνω την εκυρότητα των υποβληθέντων στοιχείων</span>
+                    </div>
+                    <div onClick={() => setApodoxi(!apodoxi)} className="clickable">
+                      <input type="checkbox" size="100" checked={apodoxi} /> <span>Αποδοχή <a href="/help/conditions" target='blank'>όρων και προϋποθέσεων</a></span>
+                    </div>
+                  </div>
                 </div>
               </div>
             : (page === 5) ?
               <div className='main-content'>
                 <div style={{marginLeft:'250px'}}>
-                  5
+                <div style={{marginLeft:'auto', marginRight:'auto', width:'fit-content', fontSize:'25px', fontWeight:'700', marginBottom:'50px'}}>Στοιχεία γονέα</div>
+                <form style={{width:'fit-content', marginLeft:'auto', marginRight:'auto', marginTop:'50px'}}>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="name-field">Όνομα</label>
+                      <input type="text" id="name-field" value={userData[0].name} disabled/>
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="surname-field">Επώνυμο</label>
+                      <input type="text" id="surname-field" value={userData[0].surname} disabled/>
+                    </div>
+                  </div>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="age-field">Ηλικία</label>
+                      <input type="number" id="age-field" disabled value={age || userData[0].age}/>
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="sex-field">Φύλο</label>
+                      <select name="cars" id="sex-field" disabled value={gender || userData[0].gender} >
+                        <option value="" hidden></option>
+                        <option value="male">Άντρας</option>
+                        <option value="female">Γυναίκα</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="amka-field">ΑΜΚΑ</label>
+                      <input type="number" id="amka-field" disabled value={AMKA || userData[0].AMKA}/>
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="afm-field">ΑΦΜ</label>
+                      <input type="number" id="afm-field" disabled value={userData[0].AFM} />
+                    </div>
+                  </div>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="email-field">Email</label>
+                      <input type="email" id="email-field" disabled value={userData[0].email}/>
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="phone-field">Τηλέφωνο</label>
+                      <input type="phone" id="phone-field"  disabled value={phone || userData[0].phone} />
+                    </div>
+                  </div>
+                  <div className="input-row">
+
+                    <div className="input_box">
+                      <label htmlFor="address-field">Δήμος</label>
+                      <select name="cars" id="sex-field"  disabled value={address || userData[0].address} >
+                        <option value=""  hidden></option>
+                        <option value="Athena">Δήμος Αθηναίων</option>
+                        <option value="Aigina">Δήμος Αίγινας</option>
+                        <option value="Peristeri">Δήμος Περιστερίου</option>
+                        <option value="Galatsi">Δήμος Γαλατσίου</option>
+                        <option value="Zografou">Δήμος Ζωγράφου</option>
+                        <option value="Irakleiou">Δήμος Ηρακλείου</option>
+                      </select>
+                    </div>
+
+                    <div className="input_box">
+                      <label htmlFor="taxidromikos-field">Ταχυδρομικός Κώδικας</label>
+                      <input type="text" id="taxidromikos-field" disabled value={tk || userData[0].tk}/>
+                    </div>
+                  </div>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="city-field">Πόλη</label>
+                      <input type="text" id="city-field"  disabled value={city || userData[0].city} />
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="area-field">Περιοχή</label>
+                      <input type="text" id="area-field"  disabled value={area || userData[0].area} />
+                    </div>
+                  </div>
+                  <div className="last-row">
+
+                  </div>
+                </form>
+
+                <div style={{marginLeft:'auto', marginRight:'auto', width:'fit-content', fontSize:'25px', fontWeight:'700', marginBottom:'30px'}}>Στοιχεία παιδιού</div>
+                <form style={{width:'fit-content', marginLeft:'auto', marginRight:'auto', marginTop:'50px'}}>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="name-field">Όνομα</label>
+                      <input type="text" id="name-field" value={childName} disabled/>
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="surname-field">Επώνυμο</label>
+                      <input type="text" id="surname-field" value={childSurname} disabled/>
+                    </div>
+                  </div>
+                  <div className="input-row">
+                    <div className="input_box">
+                      <label htmlFor="age-field">Ηλικία</label>
+                      <input type="number" id="age-field" value={childAge} disabled/>
+                    </div>
+                    <div className="input_box">
+                      <label htmlFor="sex-field">Φύλο</label>
+                      <select name="cars" id="sex-field" value={childGender} disabled>
+                        <option value="" disabled hidden></option>
+                        <option value="male">Άντρας</option>
+                        <option value="female">Γυναίκα</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="input-row">
+                    <div className="input_box" style={{marginLeft:'auto', marginRight:'auto', width:'fit-content'}}>
+                      <label htmlFor="amka-field">ΑΜΚΑ</label>
+                      <input type="number" id="amka-field" value={childAMKA} disabled/>
+                    </div>
+                  </div>
+                </form>
                 </div>
+                <hr style={{marginRight:'-250px', marginTop:'50px'}}/>
+
+                <div style={{marginLeft:'250px'}}>
+                  <h2 style={{width:'fit-content', marginLeft:'auto', marginRight:'auto'}}>Ώρες απασχόλησης</h2>
+                  <TimePickerDummy availability={hours} />
+                  <br />
+                  <h2 style={{width:'fit-content', marginLeft:'auto', marginRight:'auto'}}>Τοποθεσία απασχόλησης</h2>
+                  <div className='pass-input-container' style={{display:'flex'}}>
+                    <img style={{width:'42px'}} src='/icons/location_64.png'/>
+                    <input
+                      disabled
+                      className='form-input'
+                      style={{}}
+                      placeholder='Διεύθυνση και αριθμός'
+                      value={place}
+                      onChange={(e) => {
+                        setPlace(e.target.value)
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <hr style={{marginRight:'-250px', marginTop:'50px'}}/>
+
+                <div>
+                <div style={{marginLeft:'250px'}}>
+                  <h1 style={{ textAlign: 'center', marginTop:'70px'  }}>Συμφωνητικό συνεργασίας</h1>
+                  <div className='box1' style={{width:'100px', marginLeft:'auto', marginRight:'auto', width:'fit-content'}}>
+                      {aggrement}
+                  </div>
+                </div>
+                <br />
+                <div style={{marginLeft:'250px'}}>
+                  <h2 style={{ textAlign: 'center'}}>Ισχύς συνεργασίας</h2>
+                  <div style={{display:'flex'}}>
+                    <div>
+                      <h4>Από</h4>
+                      <select disabled onChange={(e) => setStartDay(e.target.value)} value={startDay}>
+                        <option value="" disabled selected>Ημέρα</option> {/* days do not adjust with months */}
+                        {days.map((day) => (
+                          <option key={day} value={day}>
+                            {day}
+                          </option>
+                        ))}
+                      </select> / 
+                      <select disabled style={{marginLeft:'5px'}} onChange={(e) => setStartMonth(e.target.value)} value={startMonth}>
+                        <option value="" disabled selected>Μήνας</option>
+                        {months.map((month) => (
+                          <option key={month} value={month}>
+                            {month}
+                          </option>
+                        ))}
+                      </select> /
+                      <select disabled style={{marginLeft:'5px'}} onChange={(e) => setStartYear(e.target.value)} value={startYear}>
+                        <option value="" disabled selected>Έτος</option>
+                        <option>2025</option>
+                        <option>2026</option>
+                      </select>
+                    </div>
+                    <div style={{marginLeft:'15px'}}>
+                      <h4>Μέχρι</h4>
+                      <select disabled onChange={(e) => setEndDay(e.target.value)} value={endDay}>
+                        <option value="" disabled selected>Ημέρα</option> {/* days do not adjust with months */}
+                        {days.map((day) => (
+                          <option key={day} value={day}>
+                            {day}
+                          </option>
+                        ))}
+                      </select> / 
+                      <select disabled style={{marginLeft:'5px'}} onChange={(e) => setEndMonth(e.target.value)} value={endMonth}>
+                        <option value="" disabled selected>Μήνας</option>
+                        {months.map((month) => (
+                          <option key={month} value={month}>
+                            {month}
+                          </option>
+                        ))}
+                      </select> /
+                      <select disabled style={{marginLeft:'5px'}} onChange={(e) => setEndYear(e.target.value)} value={endYear}>
+                        <option value="" disabled selected>Έτος</option>
+                        <option>2025</option>
+                        <option>2026</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                </div>
+
+                <hr style={{marginRight:'-250px', marginTop:'50px'}}/>
+
+                <div style={{marginLeft:'250px'}}>
+                  <div style={{marginLeft:'auto', marginRight:'auto', width:'fit-content', fontSize:'25px', fontWeight:'700', marginBottom:'50px', marginTop:'50px'}}>Όροι και προϋποθέσεις</div>
+                  <div>
+                    <div style={{marginBottom:'50px'}}>
+                      <input type="checkbox" disabled checked={dilosi}/> <span>Δηλώνω υπεύθυνα ότι επιβεβαιώνω την εκυρότητα των υποβληθέντων στοιχείων</span>
+                    </div>
+                    <div>
+                      <input type="checkbox" disabled size="100" checked={apodoxi} /> <span>Αποδοχή <a href="/help/conditions" target='blank'>όρων και προϋποθέσεων</a></span>
+                    </div>
+                  </div>
+                </div>     
               </div>
             : <></>
             }
           </div>
           <div style={{width:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
-            <div style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:'100px', gap:'40px', marginLeft:'250px'}}>
+            <div style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:'-150px', marginBottom:'150px',gap:'40px', marginLeft:'250px'}}>
               <div style={{ width: 'fit-content'}}>
                 <button className='button-40' style={{ display: 'flex', alignItems: 'center' }} onClick={() => {setPage(page-1)}}>
                   <img src='/icons/left_arrow.svg' width='28px' style={{ marginRight: '8px' }} />
@@ -253,10 +857,17 @@ const Applications = () => {
                 </button>
               </div>
               <div style={{ width: 'fit-content'}}>
-                <button disabled={page>4} className='button-40' style={{ display: 'flex', alignItems: 'center', backgroundColor:'#ffffff', color:'#000000', border: '2px solid #111827' }} onClick={() => {setPage(page+1)}}>
-                  <span style={{marginLeft:'21px'}}>Επόμενο</span>
-                  <img src='/icons/right_arrow.svg' width='28px' style={{ marginLeft: '8px', marginRight:'21px' }} />
-                </button>
+                { page !== 5 ?
+                  <button disabled={page>4} className='button-40' style={{ display: 'flex', alignItems: 'center', backgroundColor:'#ffffff', color:'#000000', border: '2px solid #111827' }} onClick={forwardPage}>
+                    <span style={{marginLeft:'21px'}}>Επόμενο</span>
+                    <img src='/icons/right_arrow.svg' width='28px' style={{ marginLeft: '8px', marginRight:'21px' }} />
+                  </button>
+                  :
+                  <button disabled={page>4} className='button-40' style={{ display: 'flex', alignItems: 'center', backgroundColor:'#ffffff', color:'#000000', border: '2px solid #111827' }}>
+                    <span style={{marginLeft:'21px'}}>Υποβολή αίτησης</span>
+                    <img src='/icons/airplane.svg' width='28px' style={{ marginLeft: '8px', marginRight:'21px' }} />
+                  </button>
+                }
               </div>
             </div>
           </div>
@@ -292,6 +903,7 @@ const Applications = () => {
               </div>
             </div>
         }
+      <Footer />
     </div>
   )
 }

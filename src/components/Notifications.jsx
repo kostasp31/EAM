@@ -139,7 +139,7 @@ const Notofications = () => {
         <div style={{ height: '15px', alignItems: 'left' }}>
           <a href='/'>Aρχική σελίδα</a>
           {'  >  '}
-          <a href='/profs'>Επαγγελματίες</a>
+          <a href='/parent'>Γονείς</a>
           {'  >  Ειδοποιήσεις'}
         </div>
         <h1 style={{ marginTop: "35px" }}>&emsp;Ειδοποιήσεις ({userData[0] && userData[0].notifications ? userData[0].notifications.length : ''})</h1>
@@ -150,7 +150,7 @@ const Notofications = () => {
         userData[0].notifications ? 
           <NotificationsComponent user_data={userData[0]} />
           :
-          <div className='main-content'>
+          <div className='main-content'  style={{marginBottom:'500px'}}>
             <div style={{marginLeft:'250px'}}>
               <h1 style={{ marginTop: "35px" }}>&emsp;Δεν υπάρχουν ειδοποιήσεις</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -160,7 +160,7 @@ const Notofications = () => {
         :
 
         (isProf === 'professional') ?
-          <div className='main-content'>
+          <div className='main-content' style={{marginBottom:'500px'}}>
             <div style={{marginLeft:'250px'}}>
               <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως γονέας</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -177,7 +177,7 @@ const Notofications = () => {
               <img style={{marginLeft:'250px'}} src='/gifs/loading.svg' />
             </div>
           :
-          <div className='main-content'>
+          <div className='main-content' style={{marginBottom:'500px'}}>
             <div style={{marginLeft:'250px'}}>
               <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως γονέας</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>

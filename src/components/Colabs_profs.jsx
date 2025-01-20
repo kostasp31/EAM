@@ -456,7 +456,7 @@ const Colabs_profs = () => {
         !showingColab ?
           <div>
             {!userData[0].colabs || userData[0].colabs.length === 0 ?
-              <div className='main-content'>
+              <div className='main-content' style={{marginBottom:'500px'}}>
                 <div style={{marginLeft:'250px'}}>
                   <h1 style={{ marginTop: "35px" }}>&emsp;Δεν έχετε συνάψει συνεργασίες</h1>
                   <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -548,7 +548,7 @@ const Colabs_profs = () => {
           </div>
         :
         (isProf === 'parent') ?
-          <div className='main-content' style={{height:'20vh'}}>
+          <div className='main-content' style={{height:'20vh', marginBottom:'250px'}}>
             <div style={{marginLeft:'250px'}}>
               <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -565,7 +565,7 @@ const Colabs_profs = () => {
               <img style={{marginLeft:'250px'}} src='/gifs/loading.svg' />
             </div>
           :
-          <div className='main-content'>
+          <div className='main-content' style={{marginBottom:'500px'}}>
             <div style={{marginLeft:'250px'}}>
               <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>

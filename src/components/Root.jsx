@@ -507,52 +507,53 @@ const Root = ({filters, setFilters}) => {
           </div>
         </div>
 
-        <div className='diadikasia-text' style={{marginBottom:'10px'}}>Αξιολογήσεις</div>
-        <hr style={{width:'10%', marginBottom:'30px'}} />
-        {/*https://kenwheeler.github.io/slick/*/}
+        { featuredRatings  && featuredRatings.length === 3 &&
+        <div>
+          <div className='diadikasia-text' style={{marginBottom:'10px'}}>Αξιολογήσεις</div>
+          <hr style={{width:'10%', marginBottom:'30px'}} />
+          {/*https://kenwheeler.github.io/slick/*/}
+          <Slider {...carouselSettings} style={{margin:'0 auto', marginBottom:'200px', width:'70%'}}>
+            { featuredRatings.map((el) => {
+              return (
+                <div className='slide' style={{display:'flex', flexDirection:'column', textAlign:'left'}}>
+                  <StarRatings
+                    rating={el.rating}
+                    starRatedColor="gold"
+                    starDimension="30px"
+                    starSpacing="5px"
+                    numberOfStars={5}
+                    name='rating'
+                    style={{alignItems:'left'}}
+                  />
 
-        { featuredRatings  &&
-        <Slider {...carouselSettings} style={{margin:'0 auto', marginBottom:'200px', width:'70%'}}>
-          { featuredRatings.map((el) => {
-            return (
-              <div className='slide' style={{display:'flex', flexDirection:'column', textAlign:'left'}}>
-                <StarRatings
-                  rating={el.rating}
-                  starRatedColor="gold"
-                  starDimension="30px"
-                  starSpacing="5px"
-                  numberOfStars={5}
-                  name='rating'
-                  style={{alignItems:'left'}}
-                />
+                  <div style={{margin:'0 auto', justifyContent:'center',   maxWidth:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
 
-                <div style={{margin:'0 auto', justifyContent:'center',   maxWidth:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
+                  <h2 style={{textAlign:'left'}}>{el.title}</h2>
+                  <h4 style={{textAlign:'left', marginTop:'-20px'}}>{el.content}</h4>
 
-                <h2 style={{textAlign:'left'}}>{el.title}</h2>
-                <h4 style={{textAlign:'left', marginTop:'-20px'}}>{el.content}</h4>
-
-                <div style={{display:'flex', flexDirection:'row'}}>
-                  <div style={{marginRight:'10px', textAlign:'left'}}>
-                    {/* <img src='icons/pfp.svg' width={48} /> */}
-                    <CircleWithInitialsProfile name={el.author.split(" ")[0]} surname={el.author.split(" ")[1]} size={48} />
-                  </div>
-                  <div>
+                  <div style={{display:'flex', flexDirection:'row'}}>
+                    <div style={{marginRight:'10px', textAlign:'left'}}>
+                      {/* <img src='icons/pfp.svg' width={48} /> */}
+                      <CircleWithInitialsProfile name={el.author.split(" ")[0]} surname={el.author.split(" ")[1]} size={48} />
+                    </div>
                     <div>
-                      {el.author}
-                    </div>
-                    <div style={{textAlign:'left'}}>
-                      <FormattedTimestamp timestamp={el.review_date} />
+                      <div>
+                        {el.author}
+                      </div>
+                      <div style={{textAlign:'left'}}>
+                        <FormattedTimestamp timestamp={el.review_date} />
+                      </div>
                     </div>
                   </div>
-                </div>
 
+                  </div>
                 </div>
-              </div>
-            )
+              )
 
-        })}
-        </Slider>
-      }
+          })}
+          </Slider>
+        </div>
+        }
 
 
 

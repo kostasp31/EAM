@@ -177,7 +177,7 @@ const Profile_Profs = () => {
         :
 
         (isProf === 'parent') ?
-          <div className='main-content' style={{height:'20vh'}}>
+          <div className='main-content' style={{height:'20vh',marginBottom:'500px'}}>
             <div style={{marginLeft:'250px'}}>
               <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -194,7 +194,7 @@ const Profile_Profs = () => {
               <img style={{marginLeft:'250px'}} src='/gifs/loading.svg' />
             </div>
           :
-          <div className='main-content'>
+          <div className='main-content' style={{marginBottom:'500px'}}>
             <div style={{marginLeft:'250px'}}>
               <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>

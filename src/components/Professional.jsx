@@ -121,7 +121,7 @@ const Prof = () => {
             <li>
               <div style={{cursor:'pointer', marginRight:'10px'}} onClick={() => setClickedProfile(!clickedProfile)}>
                 <CircleWithInitials name={userData[0].name} surname={userData[0].surname} />
-                <span class="dot" style={{  height: '10px', width: '10px', backgroundColor: '#ff0000', borderRadius: '50%', position:'absolute', marginTop:'-8px', marginLeft:'28px'}}></span>
+                <span className="dot" style={{  height: '10px', width: '10px', backgroundColor: '#ff0000', borderRadius: '50%', position:'absolute', marginTop:'-8px', marginLeft:'28px'}}></span>
               </div>
               { clickedProfile ?
               <div className="menu">
@@ -139,7 +139,7 @@ const Prof = () => {
             </li>
           :
             (!window.localStorage.length) ?
-              <li class="nav-item"><a href="/login">Σύνδεση</a></li>
+              <li className="nav-item"><a href="/login">Σύνδεση</a></li>
             :
               ''
           }
@@ -225,7 +225,7 @@ const Prof = () => {
                   :
                   <h3>Εκκρεμούν {userData[0].dates.filter((el) => el.state === 'pending').length} <a href='/dates_profs' style={{ color: 'blue' }}>με γονείς</a>.</h3>
               }
-              <a className='button-purple-center' href='/dates' style={{ width: '190px' }}><b style={{ color: '#65558f' }}>Προβολή Ραντεβού</b></a>
+              <a className='button-purple-center' href='/dates_profs' style={{ width: '190px' }}><b style={{ color: '#65558f' }}>Προβολή Ραντεβού</b></a>
 
             </div>
             <div className="box top-right">
@@ -305,8 +305,8 @@ const Prof = () => {
                 </div>
 
                 <div style={{ display: 'flex', justifyContent: 'center', verticalAlign:'center' }}>
-                  <a className='button-purple' href='/profile' style={{ color: '#65558f' }}><b>Προβολή Προφίλ</b></a>
-                  <a className='button-purple' href='' style={{ color: 'red' }}><img src='icons/pencil.svg' style={{width:'20px', height:'20px'}} /></a>
+                  <a className='button-purple' href='/profile_profs' style={{ color: '#65558f' }}><b>Προβολή Προφίλ</b></a>
+                  <a className='button-purple' href='/profile_profs' style={{ color: 'red' }}><img src='icons/pencil.svg' style={{width:'20px', height:'20px'}} /></a>
                 </div>
 
             </div>
@@ -318,15 +318,15 @@ const Prof = () => {
                 <div style={{display:'flex', flexDirection:'column', marginBottom:'100px', marginLeft:'30px',  gap:'20px', marginTop:'30px'}}>
                   <div style={{display:'flex', gap:'50px', textAlign:'left'}}>
                     <div className='profile-key' >Βασική εκπαίδευση:</div>
-                    <div className='profile-value' >{userData[0].education[0] || 'Άγνωστο'}</div>
+                    <div className='profile-value' >{ (userData[0].education && userData[0].education[0]) ? userData[0].education[0] : 'Άγνωστο'}</div>
                   </div>
                   <div style={{display:'flex', gap:'50px', textAlign:'left'}}>
                     <div className='profile-key' >Τίτλος σπουδών:</div>
-                    <div className='profile-value' >{userData[0].education[1] || 'Άγνωστο'}</div>
+                    <div className='profile-value' >{ (userData[0].education && userData[0].education[1]) ? userData[0].education[1] : 'Άγνωστο'}</div>
                   </div>
                   <div style={{display:'flex', gap:'50px'}}>
                     <div className='profile-key' >Προϋπηρεσία:</div>
-                    <div className='profile-value' >{userData[0].experience[0] || 'Άγνωστο'}</div>
+                    <div className='profile-value' >{ (userData[0].experience && userData[0].experience[0]) ? userData[0].experience[0] : 'Άγνωστο'}</div>
                   </div>
                   <div style={{display:'flex', gap:'50px'}}>
                     <div className='profile-key' >Γνώση Αγγλικών:</div>
@@ -344,9 +344,9 @@ const Prof = () => {
         :
 
         (isProf === 'parent') ?
-          <div className='main-content' style={{height:'20vh'}}>
+          <div className='main-content' style={{height:'20vh',marginBottom:'500px'}}>
             <div style={{marginLeft:'250px'}}>
-              <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
+              <h1 style={{ marginTop: "35px",marginBottom:'700px' }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
                 <button className='button-40' style={{ display: 'flex', alignItems: 'center' }} onClick={() => {handleLogoutLogin()}}>
                   <img src='icons/login.svg' width='28px' style={{ marginRight: '8px' }} />
@@ -361,7 +361,7 @@ const Prof = () => {
               <img style={{marginLeft:'250px'}} src='/gifs/loading.svg' />
             </div>
           :
-          <div className='main-content'>
+          <div className='main-content' style={{marginBottom:'500px'}}>
             <div style={{marginLeft:'250px'}}>
               <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>

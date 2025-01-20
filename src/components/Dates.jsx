@@ -611,7 +611,7 @@ const Dates = ({selectedDate, setSelectedDate}) => {
 
       :
       (isProf === 'professional') ?
-        <div className='main-content'>
+        <div className='main-content' style={{marginBottom:'500px'}}>
           <div style={{marginLeft:'250px'}}>
             <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως γονέας</h1>
             <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -624,11 +624,11 @@ const Dates = ({selectedDate, setSelectedDate}) => {
         </div>
       :
         (window.localStorage.length) ?
-          <div className='main-content'>
+          <div className='main-content' style={{marginBottom:'500px'}}>
             <img style={{marginLeft:'250px'}} src='/gifs/loading.svg' />
           </div>
         :
-        <div className='main-content'>
+        <div className='main-content' style={{marginBottom:'500px'}}>
           <div style={{marginLeft:'250px'}}>
             <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως γονέας</h1>
             <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>

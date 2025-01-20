@@ -374,15 +374,6 @@ const Ad = () => {
                 </div>
               :
                 <div>
-
-
-
-
-
-
-
-
-
                     <div className='main-content' style={{ maxWidth: 'fit-content', marginLeft: 'auto', marginRight: 'auto', paddingLeft: '250px', paddingTop: '0px', marginTop:'50px' }}>
                     <div style={{display:'flex', flexDirection:'column', gap:'70px'}}>
                       <div style={{display:'flex', flexDirection:'row', gap:'70px'}}>
@@ -501,7 +492,7 @@ const Ad = () => {
               }
             </div>
           :
-            <div className='main-content'>
+            <div className='main-content' style={{marginBottom:'400px'}}>
               <div style={{marginLeft:'250px'}}>
                 <h1 style={{ marginTop: "35px" }}>&emsp;Δεν έχετε καταχωρήσει αγγελία</h1>
                 <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -518,7 +509,7 @@ const Ad = () => {
       :
 
       (isProf === 'parent') ?
-        <div className='main-content' style={{height:'20vh'}}>
+        <div className='main-content' style={{height:'20vh', marginBottom:'500px'}}>
           <div style={{marginLeft:'250px'}}>
             <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
             <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -535,7 +526,7 @@ const Ad = () => {
             <img style={{marginLeft:'250px'}} src='/gifs/loading.svg' />
           </div>
         :
-        <div className='main-content'>
+        <div className='main-content' style={{marginBottom:'500px'}}>
           <div style={{marginLeft:'250px'}}>
             <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
             <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>

@@ -709,7 +709,7 @@ const Colabs = () => {
         !showingColab ?
           <div>
             {!userData[0].colabs || userData[0].colabs.length === 0 ?
-              <div className='main-content'>
+              <div className='main-content' style={{marginBottom:'500px'}}>
                 <div style={{marginLeft:'250px'}}>
                   <h1 style={{ marginTop: "35px" }}>&emsp;Δεν έχετε συνάψει συνεργασίες</h1>
                   <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -770,7 +770,7 @@ const Colabs = () => {
                         <div style={{height:'fit-content', marginTop:'auto', marginBottom:'auto'}}>
                           <div style={{fontSize:'20px', fontWeight:'700', marginBottom:'5px'}}>
                             <div>
-                              Συνεργασία με {el.parent_name}
+                              Συνεργασία με {el.prof_name}
                             </div>
                           </div>
                         </div>
@@ -807,7 +807,7 @@ const Colabs = () => {
           </div>
         :
         (isProf === 'professional') ?
-          <div className='main-content'>
+          <div className='main-content' style={{marginBottom:'500px'}}>
             <div style={{marginLeft:'250px'}}>
               <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως γονέας</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -824,7 +824,7 @@ const Colabs = () => {
               <img style={{marginLeft:'250px'}} src='/gifs/loading.svg' />
             </div>
           :
-          <div className='main-content'>
+          <div className='main-content' style={{marginBottom:'500px'}}>
             <div style={{marginLeft:'250px'}}>
               <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως γονέας</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>

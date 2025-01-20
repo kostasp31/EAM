@@ -87,9 +87,13 @@ const Ratings = () => {
       if (users[0] && users[0].user_category === 'professional') {
         setIsProf('professional')
         let count = 0
-        for (let i=0; i<users[0].ratings.length; i++)
-          count += users[0].ratings[i].rating
-        setMeanRating(count / users[0].ratings.length)
+        if (users[0].ratings) {
+          for (let i=0; i<users[0].ratings.length; i++) {
+            count += users[0].ratings[i].rating
+          }
+          setMeanRating(count / users[0].ratings.length)
+        }
+        setMeanRating(0)
       }
       else
         setIsProf('parent')
@@ -289,7 +293,7 @@ const Ratings = () => {
             </div>
         </div>
         :
-        <div className='main-content'>
+        <div className='main-content' style={{marginBottom:'500px'}}>
           <div style={{marginLeft:'250px'}}>
             <h1 style={{ marginTop: "35px" }}>&emsp;Δεν υπάρχουν αξιολογήσεις</h1>
             <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -298,7 +302,7 @@ const Ratings = () => {
         </div>
       :
       (isProf === 'parent') ?
-        <div className='main-content' style={{height:'20vh'}}>
+        <div className='main-content' style={{height:'20vh',marginBottom:'500px'}}>
           <div style={{marginLeft:'250px'}}>
             <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
             <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -315,7 +319,7 @@ const Ratings = () => {
             <img style={{marginLeft:'250px'}} src='/gifs/loading.svg' />
           </div>
         :
-        <div className='main-content'>
+        <div className='main-content' style={{marginBottom:'500px'}}>
           <div style={{marginLeft:'250px'}}>
             <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
             <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>

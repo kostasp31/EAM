@@ -157,6 +157,21 @@ const Applications = ({selectedDate}) => {
     }
   }
 
+  const isStartDateBefore = () => {
+    // Create date strings in the format YYYY-MM-DD
+    const startDateStr = `${startYear}-${startMonth.padStart(2, '0')}-${startDay.padStart(2, '0')}`
+    const endDateStr = `${endYear}-${endMonth.padStart(2, '0')}-${endDay.padStart(2, '0')}`
+    
+    // Convert strings to Date objects
+    const startDate = new Date(startDateStr)
+    const endDate = new Date(endDateStr)
+    
+    // Compare the two dates
+    return startDate < endDate
+}
+
+
+
   const forwardPage = () => {
     let failed = false
     if (page === 1) {
@@ -240,6 +255,10 @@ const Applications = ({selectedDate}) => {
       }
       if (!startDay || !startMonth || !startYear || !endDay || !endMonth || !endYear) {
         triggerNotif('danger', 'Σφάλμα', 'Ορίστε ημερομηνίες έναρξης και τερματισμού συνεργασίας')
+        failed= true
+      }
+      if (!isStartDateBefore()) {
+        triggerNotif('danger', 'Σφάλμα', 'Η ημερομηνία έναρξης είναι μεταγενέστερη της ημερομηνίας λήξης')
         failed= true
       }
       if (failed) {
@@ -514,16 +533,18 @@ const Applications = ({selectedDate}) => {
       {(userData[0] && userId && userData[0].user_category === "parent") ?
         (page === 0) ?
           <div>
+            <div style={{width:'fit-content', marginRight:'auto', marginLeft:'auto', marginTop:'50px', marginBottom:'100px'}}>
+              <h2 style={{ textAlign: 'left', marginLeft:'250px' }}>Ενεργές αιτήσεις</h2>
+            </div>
             { userData[0].applications && userData[0].applications.map((apple) => {
               index++
               return (
-                <div style={{width:'fit-content', marginRight:'auto', marginLeft:'auto', marginTop:'50px', marginBottom:'500px'}}>
-                  <h2 style={{ textAlign: 'left', marginLeft:'250px' }}>Ενεργές αιτήσεις</h2>
+                <div style={{width:'fit-content', marginRight:'auto', marginLeft:'auto', marginTop:'50px', marginBottom:'100px'}}>
                   <div className='box1' style={{height:'fit-content', marginBottom:'50px', display:'flex', flexDirection:'row', marginLeft:'250px', width:'1200px'}}>
                     <div style={{height:'fit-content', marginTop:'auto', marginBottom:'auto'}}>
                       <div style={{fontSize:'20px', fontWeight:'700', marginBottom:'5px'}}>
                         <div>
-                          Συνεργασία με {apple.prof_name}
+                          Αίτηση συνεργασίας με {apple.prof_name}
                         </div>
                       </div>
                     </div>
@@ -541,6 +562,17 @@ const Applications = ({selectedDate}) => {
                 </div>
               )
             })}
+            <div>
+            {!userData[0].applications &&
+              <div className='main-content' style={{marginBottom:'500px'}}>
+                <div style={{marginLeft:'250px'}}>
+                  <h1 style={{ marginTop: "35px" }}>&emsp;Δεν έχετε υποβάλλει καμία αίτηση</h1>
+                  <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
+                  </div>
+                </div>
+              </div>
+            }
+            </div>
 
             {/* <div style={{}}>
               <button className='button-40' style={{width:'200px', marginLeft:'auto', marginRight:'auto', display:'block'}} onClick={() => setPage(1)}>
@@ -940,7 +972,7 @@ const Applications = ({selectedDate}) => {
                 <div>
                 <div style={{marginLeft:'250px'}}>
                   <h1 style={{ textAlign: 'center', marginTop:'70px'  }}>Συμφωνητικό συνεργασίας</h1>
-                  <div className='box1' style={{width:'100px', marginLeft:'auto', marginRight:'auto', width:'fit-content'}}>
+                  <div className='box1' style={{marginLeft:'auto', marginRight:'auto', width:'fit-content'}}>
                       {aggrement}
                   </div>
                 </div>
@@ -1038,18 +1070,12 @@ const Applications = ({selectedDate}) => {
                   </button>
                 }
               </div>
-              <div style={{ width: 'fit-content'}}>
-                <button className='button-40' style={{ display: 'flex', alignItems: 'center' }} onClick={() => {setPage(page-1)}}>
-                  <img src='/icons/save.svg' width='28px' style={{ marginRight: '8px' }} />
-                  <span>Αποθήκευση αίτησης</span>
-                </button>
-              </div>
             </div>
           </div>
         </div>
       :
         (isProf === 'professional') ?
-          <div className='main-content'>
+          <div className='main-content' style={{marginBottom:'500px'}}>
             <div style={{marginLeft:'250px'}}>
               <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως γονέας</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
@@ -1066,7 +1092,7 @@ const Applications = ({selectedDate}) => {
               <img style={{marginLeft:'250px'}} src='/gifs/loading.svg' />
             </div>
           :
-            <div className='main-content'>
+            <div className='main-content' style={{marginBottom:'500px'}}>
               <div style={{marginLeft:'250px'}}>
                 <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως γονέας</h1>
                 <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>

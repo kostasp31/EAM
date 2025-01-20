@@ -93,7 +93,8 @@ const Ratings = () => {
           }
           setMeanRating(count / users[0].ratings.length)
         }
-        setMeanRating(0)
+        else
+          setMeanRating(0)
       }
       else
         setIsProf('parent')

@@ -12,7 +12,7 @@ import 'react-notifications-component/dist/theme.css'
 import 'animate.css/animate.min.css'
 
 
-const Date = ({date, userData, userId, triggerNotif, submittedDate, setSubmittedDate}) => {
+const Single_Date = ({date, userData, userId, triggerNotif, submittedDate, setSubmittedDate}) => {
   const acceptDate = async () => {
     try {
       // Create a query against the collection
@@ -65,7 +65,7 @@ const Date = ({date, userData, userId, triggerNotif, submittedDate, setSubmitted
         const newNotif = {
           content: "αποδέχτηκε το ραντεβού σας",
           ref_user: userData[0].name + ' ' + userData[0].surname,
-          time: 1646108200 
+          time: Math.floor(Date.now() / 1000)  
         }
 
 
@@ -249,12 +249,12 @@ const Dates = ({selectedDate, setSelectedDate}) => {
               <div className="menu">
                 <ul>
                   {userData[0].user_category === 'professional' ?
-                    <li><a href="/profile_profs">Profile</a></li>
+                    <li><a href="/profile_profs">Προφίλ</a></li>
                     :
-                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/profile">Προφίλ</a></li>
                   }
 
-                  <li onClick={handleLogout}>Logout</li>
+                  <li onClick={handleLogout} style={{color:'#ff0000', cursor:'pointer'}}>Αποσύνδεση</li>
                 </ul>
               </div>
               : '' }
@@ -294,12 +294,13 @@ const Dates = ({selectedDate, setSelectedDate}) => {
       </div>
 
       {(userData[0] && userId && userData[0].user_category === "professional") ?
+      <div style={{width:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
       <div style={{display:'flex', marginLeft:'250px'}}>
-        <div className='box' style={{width: "70%", height: "auto",marginTop: "50px",marginLeft:"350px", marginBottom:"50px"}}>
-          <h3 style={{textAlign:'center'}}>Τα ραντεβού σας</h3>
+        <div className='box' style={{width: "1200px", height: "auto",marginTop: "50px", marginBottom:"50px"}}>
+          <h2 style={{textAlign:'center'}}>Τα ραντεβού σας</h2>
           { userData[0] && userData[0].dates ?
               userData[0].dates.map((date) => {
-                return (<Date date={date} userData={userData} userId={userId} triggerNotif={triggerNotif} submittedDate={submittedDate} setSubmittedDate={setSubmittedDate}/>)
+                return (<Single_Date date={date} userData={userData} userId={userId} triggerNotif={triggerNotif} submittedDate={submittedDate} setSubmittedDate={setSubmittedDate}/>)
               })
           :
               <div>
@@ -309,10 +310,11 @@ const Dates = ({selectedDate, setSelectedDate}) => {
           }
         </div>
       </div>
+      </div>
 
         :
         (isProf === 'parent') ?
-          <div className='main-content'>
+          <div className='main-content' style={{height:'20vh'}}>
             <div style={{marginLeft:'250px'}}>
               <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>

@@ -162,7 +162,7 @@ const Profile = () => {
         <div style={{ height: '15px', alignItems: 'left' }}>
           <a href='/'>Aρχική σελίδα</a>
           {'  >  '}
-          <a href='/profs'>Επαγγελματίες</a>
+          <a href='/parent'>Γονείς</a>
           {'  >  Προφίλ'}
         </div>
         <h1 style={{ marginTop: "35px" }}>&emsp;Προφίλ</h1>

@@ -166,7 +166,8 @@ const Applications = ({selectedDate}) => {
         failed = true
       }
       console.log('AMKE', userData[0].AMKA, AMKA)
-      if (!(userData[0].ΑΜΚΑ || AMKA)) {
+      if (!(userData[0].AMKA  || AMKA)) {
+        console.log(userData[0].AMKA, AMKA)
         triggerNotif("danger", "Υποχρεωτικό πεδίο", "Συμπλρώστε το ΑΜΚΑ σας")
         setAMKAError(true)
         failed = true
@@ -276,8 +277,174 @@ const Applications = ({selectedDate}) => {
     });
   }
 
+  const submitApplication = async () => {
+    let res
+
+    const payments = []
+
+    const startDate = new Date(startYear, parseInt(startMonth) - 1)
+    const endDate = new Date(endYear, parseInt(endMonth))
+    for (let date = startDate; date < endDate; date.setMonth(date.getMonth() + 1)) {
+      const monthString = `${date.getMonth() + 1}/${date.getFullYear()}`
+      payments.push({
+        month: monthString,
+        paydate: 0,
+        voucher: 'https://example.com',
+        payed: false
+      })
+    }
+
+
+    let payload = {
+        startDay: startDay,
+        endDay: endDay,
+        startMonth: startMonth,
+        endMonth: endMonth,
+        startYear: startYear,
+        endYear: endYear,
+        accepted: false,
+        active: true,
+        refused: false,
+        parent_id: userId,
+        prof_id: selectedDate.prof_id,
+        parent_name: userData[0].name + ' ' + userData[0].surname,
+        prof_name: selectedDate.prof_name,
+        payments: payments
+    }
+
+    try {
+        // get the professional data
+        let prof_data
+        try {
+          const q = query(collection(FIREBASE_DB, 'user_data'), where('uid', '==', selectedDate.prof_id)) // Query only data matching the user's UID
+          const querySnapshot = await getDocs(q)
+          prof_data = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }))
+          // console.log("user id: ", userId)
+          console.log("prof data: ", prof_data)
+        } catch (error) {
+          console.error('Error fetching professional data:', error)
+        }
+
+
+        // Add the document and get the document reference
+        res = await addDoc(collection(FIREBASE_DB, 'colabs'), payload)
+        console.log('Successful update', res.id)
+
+        // Add the colab to parent's data
+        const parentQuery = query(collection(FIREBASE_DB, 'user_data'), where('uid', '==', userData[0].uid))
+        const parentSnapshot = await getDocs(parentQuery)
+        if (!parentSnapshot.empty) {
+            const parentDocRef = doc(FIREBASE_DB, 'user_data', parentSnapshot.docs[0].id)
+            let temp = userData[0].colabs
+            if (!temp)
+              temp = []
+            temp.push(res.id)
+            await updateDoc(parentDocRef, {
+              colabs: temp
+            })
+        } else {
+            console.log("No such document found with the specified uid!")
+        }
+
+        // Add the colab to prof's data
+        const profQuery = query(collection(FIREBASE_DB, 'user_data'), where('uid', '==', selectedDate.prof_id))
+        const profSnapshot = await getDocs(profQuery)
+        if (!profSnapshot.empty) {
+            const profDocRef = doc(FIREBASE_DB, 'user_data', profSnapshot.docs[0].id)
+            let temp = prof_data[0].colabs
+            if (!temp)
+              temp = []
+            temp.push(res.id)
+            await updateDoc(profDocRef, {
+              colabs: temp
+            })
+        } else {
+            console.log("No such document found with the specified uid!")
+        }
+
+        // Add a notification to the prof
+        const notifQuery = query(collection(FIREBASE_DB, 'user_data'), where('uid', '==', selectedDate.prof_id))
+        const notifSnapshot = await getDocs(notifQuery)
+        if (!notifSnapshot.empty) {
+            const notifDocRef = doc(FIREBASE_DB, 'user_data', notifSnapshot.docs[0].id)
+            let oldNotifs = prof_data[0].notifications
+            if (!oldNotifs)
+              oldNotifs = []
+            const newNotif = {
+                content: "υπέβαλε αίτηση για συνεργασία μαζί σας",
+                ref_user: userData[0].name + ' ' + userData[0].surname,
+                time: Math.floor(Date.now() / 1000) 
+            }
+            oldNotifs.push(newNotif)
+            await updateDoc(notifDocRef, { notifications: oldNotifs })
+        } else {
+            console.log("No such document found with the specified uid!")
+        }
+
+
+        const whatiseventhat = {
+          name: userData[0].name,
+          surname: userData[0].surname,
+          age: age || userData[0].age,
+          gender: gender || userData[0].gender,
+          AMKA: AMKA || userData[0].AMKA,
+          AFM: userData[0].AFM,
+          email: userData[0].email,
+          phone: phone || userData[0].phone,
+          address: address || userData[0].address, 
+          tk: tk || userData[0].tk,
+          city: city || userData[0].city,
+          area:area || userData[0].area,
+          childName: childName,
+          childSurname:childSurname,
+          childAge:childAge,
+          childGender:childGender,
+          childAMKA:childAMKA,
+          hours: hours,
+          startDay:startDay,
+          startMonth:startMonth,
+          startYear:startYear,
+          endDay:endDay,
+          endMonth:endMonth,
+          endYear:endYear,
+          place: place,
+          dilosi: dilosi,
+          apodoxi: apodoxi,
+          aggrement: aggrement,
+          prof_name: selectedDate.prof_name
+        }
+        // Add the colab to parent's data
+        const parentQuery3 = query(collection(FIREBASE_DB, 'user_data'), where('uid', '==', userData[0].uid))
+        const parentSnapshot3 = await getDocs(parentQuery3)
+        if (!parentSnapshot3.empty) {
+            const parentDocRef = doc(FIREBASE_DB, 'user_data', parentSnapshot3.docs[0].id)
+            let temp = userData[0].applications
+            if (!temp)
+              temp = []
+            temp.push(whatiseventhat)
+            await updateDoc(parentDocRef, {
+              applications: temp
+            })
+        } else {
+            console.log("No such document found with the specified uid!")
+        }
+
+
+
+        triggerNotif('success', 'Επιτυχία!', 'Η αίτησή σας υποβλήθηκε επιτυχώς')
+        setPage(0)
+    } catch (error) {
+        console.error("Error in submitApplication: ", error)
+    }
+}
+
   const days = Array.from({length:31}, (_,i) => i + 1)
   const months = Array.from({length:12}, (_,i) => i + 1)
+
+  let index = -1
 
   return (    
     <div>
@@ -301,12 +468,12 @@ const Applications = ({selectedDate}) => {
               <div className="menu">
                 <ul>
                   {userData[0].user_category === 'professional' ?
-                    <li><a href="/profile_profs">Profile</a></li>
+                    <li><a href="/profile_profs">Προφίλ</a></li>
                     :
-                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/profile">Προφίλ</a></li>
                   }
 
-                  <li onClick={handleLogout}>Logout</li>
+                  <li onClick={handleLogout}  style={{color:'#ff0000', cursor:'pointer'}}>Αποσύνδεση</li>
                 </ul>
               </div>
               : '' }
@@ -347,60 +514,62 @@ const Applications = ({selectedDate}) => {
       {(userData[0] && userId && userData[0].user_category === "parent") ?
         (page === 0) ?
           <div>
-            <div style={{width:'fit-content', marginRight:'auto', marginLeft:'auto', marginTop:'50px'}}>
-              <h2 style={{ textAlign: 'left', marginLeft:'250px' }}>Ενεργές αιτήσεις</h2>
-              <div className='box1' style={{height:'fit-content', marginBottom:'50px', display:'flex', flexDirection:'row', marginLeft:'250px', width:'1200px'}}>
-                <div style={{height:'fit-content', marginTop:'auto', marginBottom:'auto'}}>
-                  <div style={{fontSize:'20px', fontWeight:'700', marginBottom:'5px'}}>
-                    <div>
-                      Συνεργασία με 
+            { userData[0].applications && userData[0].applications.map((apple) => {
+              index++
+              return (
+                <div style={{width:'fit-content', marginRight:'auto', marginLeft:'auto', marginTop:'50px', marginBottom:'500px'}}>
+                  <h2 style={{ textAlign: 'left', marginLeft:'250px' }}>Ενεργές αιτήσεις</h2>
+                  <div className='box1' style={{height:'fit-content', marginBottom:'50px', display:'flex', flexDirection:'row', marginLeft:'250px', width:'1200px'}}>
+                    <div style={{height:'fit-content', marginTop:'auto', marginBottom:'auto'}}>
+                      <div style={{fontSize:'20px', fontWeight:'700', marginBottom:'5px'}}>
+                        <div>
+                          Συνεργασία με {apple.prof_name}
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{height:'fit-content', marginTop:'auto', marginBottom:'auto', marginLeft:'10px'}}>
+                      <div className='arrow-box' ><div style={{marginLeft:'11px', paddingTop:'11px', fontWeight:700}}>Έχει υποβληθεί</div></div>
+                    </div>
+
+                    <div style={{height:'fit-content', marginTop:'auto', marginBottom:'auto', marginLeft:'auto'}}>
+                      <button className='button-40' style={{ display: 'flex', alignItems: 'center', width:'fit-content', height:'fit-content' }} onClick={() => navigate(`/applications/preview/${index}`)}>
+                        <img src='icons/layers.svg' width='20px' style={{ marginRight: '8px' }} />
+                        <span>Λεπτομέρειες</span>
+                      </button>
                     </div>
                   </div>
                 </div>
-                <div style={{height:'fit-content', marginTop:'auto', marginBottom:'auto', marginLeft:'10px'}}>
-                  <img src='icons/warning.png' width='28'/>
-                </div>
-                <div style={{height:'fit-content', marginTop:'auto', marginBottom:'auto', marginLeft:'10px'}}>
-                  <div className='arrow-box' ><div style={{marginLeft:'11px', paddingTop:'11px', fontWeight:700}}>Εκκρεμεί αποδοχή</div></div>
-                </div>
+              )
+            })}
 
-                <div style={{height:'fit-content', marginTop:'auto', marginBottom:'auto', marginLeft:'auto'}}>
-                  <button className='button-40' style={{ display: 'flex', alignItems: 'center', width:'fit-content', height:'fit-content' }}>
-                    <img src='icons/layers.svg' width='20px' style={{ marginRight: '8px' }} />
-                    <span>Λεπτομέρειες</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div style={{}}>
+            {/* <div style={{}}>
               <button className='button-40' style={{width:'200px', marginLeft:'auto', marginRight:'auto', display:'block'}} onClick={() => setPage(1)}>
                 <img src='icons/pencil.svg' width='24px'/>
                 <span>Νέα αίτηση</span>
               </button>
-            </div>
+            </div> */}
           </div>
         : 
         <div>
           <div class="stepper-wrapper" style={{marginLeft:'250px'}}>
             <div class={page === 1 ? "stepper-item active" : "stepper-item completed"}>
-              <div class="step-counter" onClick={() => {if (page > 1) setPage(1)}}>1</div>
+              <div class="step-counter" onClick={() => {if (page > 1) setPage(1)}} style={{cursor: page > 1  ? 'pointer' : ''}}>1</div>
               <div class="step-name">Βασικά στοιχεία</div>
             </div>
             <div class={page > 2 ? "stepper-item completed" : page < 2 ? "stepper-item" : "stepper-item active"}>
-              <div class="step-counter" onClick={() => {if (page > 2) setPage(2)}}>2</div>
+              <div class="step-counter" onClick={() => {if (page > 2) setPage(2)}} style={{cursor: page > 2  ? 'pointer' : ''}}>2</div>
               <div class="step-name">Τόπος - χρόνος</div>
             </div>
             <div class={page > 3 ? "stepper-item completed" : page < 3 ? "stepper-item" : "stepper-item active"}>
-              <div class="step-counter" onClick={() => {if (page > 3) setPage(3)}}>3</div>
+              <div class="step-counter" onClick={() => {if (page > 3) setPage(3)}} style={{cursor: page > 3  ? 'pointer' : ''}}>3</div>
               <div class="step-name">Συμφωνητικό</div>
             </div>
             <div class={page > 4 ? "stepper-item completed" : page < 4 ? "stepper-item" : "stepper-item active"}>
-              <div class="step-counter" onClick={() => {if (page > 4) setPage(4)}}>4</div>
+              <div class="step-counter" onClick={() => {if (page > 4) setPage(4)}} style={{cursor: page > 4  ? 'pointer' : ''}}>4</div>
               <div class="step-name">Όροι και προϋποθέσεις</div>
             </div>
             <div class={page > 5 ? "stepper-item completed" : page < 5 ? "stepper-item" : "stepper-item active"}>
-              <div class="step-counter" onClick={() => {if (page > 5) setPage(5)}}>5</div>
+              <div class="step-counter" onClick={() => {if (page > 5) setPage(5)}} style={{cursor: page > 5  ? 'pointer' : ''}}>5</div>
               <div class="step-name">Προεπισκόπηση - υποβολή</div>
             </div>
           </div>
@@ -489,7 +658,7 @@ const Applications = ({selectedDate}) => {
                   </div>
                 </form>
 
-                <div style={{marginLeft:'auto', marginRight:'auto', width:'fit-content', fontSize:'25px', fontWeight:'700', marginBottom:'30px'}}>Στοιχεία παιδιού</div>
+                <div style={{marginLeft:'auto', marginRight:'auto', width:'fit-content', fontSize:'25px', fontWeight:'700', marginBottom:'30px', marginTop:'30px'}}>Στοιχεία παιδιού</div>
                 <form style={{width:'fit-content', marginLeft:'auto', marginRight:'auto', marginTop:'50px'}}>
                   <div className="input-row">
                     <div className="input_box">
@@ -525,7 +694,7 @@ const Applications = ({selectedDate}) => {
                 </div>
               </div>
             : (page === 2) ?
-              <div className='main-content'>
+              <div className='main-content' style={{marginTop:'-80px'}}>
                 <div style={{marginLeft:'250px'}}>
                   <h2>Ώρες απασχόλησης</h2>
                   <TimePicker hours={hours} setHours={setHours} />
@@ -546,9 +715,9 @@ const Applications = ({selectedDate}) => {
                 </div>
               </div>
             : (page === 3) ?
-              <div className='main-content'>
+              <div className='main-content' style={{marginTop:'-80px'}}>
                 <div style={{marginLeft:'250px'}}>
-                  <h1 style={{ textAlign: 'center', marginTop:'70px'  }}>Συμφωνητικό συνεργασίας</h1>
+                  <h1 style={{ textAlign: 'center', marginTop:'20px'  }}>Συμφωνητικό συνεργασίας</h1>
                   <p style={{ textAlign: 'center', marginTop:'-15px' }}>Ανεβάστε το συμφωνητικό για αποδοχή από τον επαγγελματία</p>
                   <label for="images" class="drop-container" id="dropcontainer">
                     <span class="drop-title">Σύρτε αρχεία εδώ</span>
@@ -613,9 +782,9 @@ const Applications = ({selectedDate}) => {
                 </div>
               </div>
             : (page === 4) ?
-              <div className='main-content'>
+              <div className='main-content' style={{marginTop:'-80px'}}>
                 <div style={{marginLeft:'250px'}}>
-                <div style={{marginLeft:'auto', marginRight:'auto', width:'fit-content', fontSize:'25px', fontWeight:'700', marginBottom:'50px', marginTop:'-100px'}}>Όροι και προϋποθέσεις</div>
+                <div style={{marginLeft:'auto', marginRight:'auto', width:'fit-content', fontSize:'25px', fontWeight:'700', marginBottom:'50px', marginTop:'00px'}}>Όροι και προϋποθέσεις</div>
                   <div>
                     <div style={{marginBottom:'50px'}} onClick={() => setDilosi(!dilosi)} className="clickable">
                       <input type="checkbox" checked={dilosi}/> <span>Δηλώνω υπεύθυνα ότι επιβεβαιώνω την εκυρότητα των υποβληθέντων στοιχείων</span>
@@ -626,8 +795,8 @@ const Applications = ({selectedDate}) => {
                   </div>
                 </div>
               </div>
-            : (page === 5) ?
-              <div className='main-content'>
+            : (page === 5 ) ?
+              <div className='main-content' style={{marginTop:'-80px'}}>
                 <div style={{marginLeft:'250px'}}>
                 <div style={{marginLeft:'auto', marginRight:'auto', width:'fit-content', fontSize:'25px', fontWeight:'700', marginBottom:'50px'}}>Στοιχεία γονέα</div>
                 <form style={{width:'fit-content', marginLeft:'auto', marginRight:'auto', marginTop:'50px'}}>
@@ -710,7 +879,7 @@ const Applications = ({selectedDate}) => {
                   </div>
                 </form>
 
-                <div style={{marginLeft:'auto', marginRight:'auto', width:'fit-content', fontSize:'25px', fontWeight:'700', marginBottom:'30px'}}>Στοιχεία παιδιού</div>
+                <div style={{marginLeft:'auto', marginRight:'auto', width:'fit-content', fontSize:'25px', fontWeight:'700', marginBottom:'30px', marginTop:'30px'}}>Στοιχεία παιδιού</div>
                 <form style={{width:'fit-content', marginLeft:'auto', marginRight:'auto', marginTop:'50px'}}>
                   <div className="input-row">
                     <div className="input_box">
@@ -863,11 +1032,17 @@ const Applications = ({selectedDate}) => {
                     <img src='/icons/right_arrow.svg' width='28px' style={{ marginLeft: '8px', marginRight:'21px' }} />
                   </button>
                   :
-                  <button disabled={page>4} className='button-40' style={{ display: 'flex', alignItems: 'center', backgroundColor:'#ffffff', color:'#000000', border: '2px solid #111827' }}>
+                  <button className='button-40' style={{ display: 'flex', alignItems: 'center', backgroundColor:'#ffffff', color:'#000000', border: '2px solid #111827' }} onClick={submitApplication}>
                     <span style={{marginLeft:'21px'}}>Υποβολή αίτησης</span>
                     <img src='/icons/airplane.svg' width='28px' style={{ marginLeft: '8px', marginRight:'21px' }} />
                   </button>
                 }
+              </div>
+              <div style={{ width: 'fit-content'}}>
+                <button className='button-40' style={{ display: 'flex', alignItems: 'center' }} onClick={() => {setPage(page-1)}}>
+                  <img src='/icons/save.svg' width='28px' style={{ marginRight: '8px' }} />
+                  <span>Αποθήκευση αίτησης</span>
+                </button>
               </div>
             </div>
           </div>

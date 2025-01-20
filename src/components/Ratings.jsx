@@ -298,7 +298,7 @@ const Ratings = () => {
         </div>
       :
       (isProf === 'parent') ?
-        <div className='main-content'>
+        <div className='main-content' style={{height:'20vh'}}>
           <div style={{marginLeft:'250px'}}>
             <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
             <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>

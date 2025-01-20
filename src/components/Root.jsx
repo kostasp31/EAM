@@ -21,6 +21,16 @@ import ScrollButton from './ScrollButton'
 import Popup from 'reactjs-popup'
 import TimePicker from './TimePicker.jsx'
 
+const CircleWithInitialsProfile = ({ name, surname, size }) => {
+  let initials = name[0]+surname[0]
+  return (
+    <div className="circle-profile-bio"  style={{marginLeft:'auto', marginRight:'auto', width:size, height:size, fontSize:size/2}}>
+      {initials}  
+  </div>
+  )
+}
+
+
 const Root = ({filters, setFilters}) => {
   const navigate = useNavigate()
   const [userData, setUserData] = useState([])
@@ -28,6 +38,8 @@ const Root = ({filters, setFilters}) => {
   const [isProf, setIsProf] = useState('')
   const [clickedProfile, setClickedProfile] = useState(false)
   const [filledDate, setFillDate] = useState(false)
+
+  const [featuredRatings, setFeaturedRatings] = useState([])
 
   const [hours, setHours] = useState({
     "friday-end": 15,
@@ -64,6 +76,49 @@ const Root = ({filters, setFilters}) => {
       fetchUserData() // Fetch user data only after the user_id is available
     }
   }, [userId])
+
+  useEffect(() => {
+    if (userId) {
+      fetchRatings()
+    }
+  }, [userId])
+
+  const fetchRatings = async () => {
+    try {
+      const q = query(collection(FIREBASE_DB, 'user_data')) // Query only data matching the user's UID
+      const querySnapshot = await getDocs(q)
+      const users = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }))
+      // console.log("user id: ", userId)
+
+      let ratingsList = []
+      for (let i=0; i<users.length; i++) {
+        if (users[i].ratings) {
+          for (let j=0; j<users[i].ratings.length; j++) {
+            if (users[i].ratings[j].rating >= 4) {
+              console.log(users[i].ratings[j])
+              ratingsList.push(users[i].ratings[j])
+            }
+          }
+        }
+      }
+
+      if (ratingsList.length === 0 || ratingsList.length === 1 || ratingsList.length === 2) {
+        ratingsList = []
+      }
+      if (ratingsList.length > 3) {
+        ratingsList = ratingsList.slice(0, 3);
+      }
+
+      setFeaturedRatings(ratingsList)
+
+    } catch (error) {
+      console.error('Error fetching user data:', error)
+    }
+  }
+
 
   const handleLogout = async () => {
     try {
@@ -130,6 +185,19 @@ const Root = ({filters, setFilters}) => {
 
     setFilters(temp)
     navigate('/search')
+  }
+
+  const FormattedTimestamp = ({timestamp}) => {
+    const date = new Date(timestamp*1000)
+    console.log(date)
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return (
+    <>
+      {`${day}-${month}-${year}`}
+    </>
+    )
   }
 
   return (
@@ -293,7 +361,7 @@ const Root = ({filters, setFilters}) => {
           </div>
         </div>
       </div>  {/*End of above the fold elements*/}
-      <div style={{textAlign:'center'}}>
+      <div style={{textAlign:'center'}} id='diadikasia_prof'>
         <div style={{margin:'0 auto', paddingBottom:'100px'}}>
           <div className='diadikasia-text'>Διαδικασία αναζήτησης επαγγελματία</div>
           <hr style={{width:'10%', marginBottom:'30px'}} />
@@ -396,7 +464,7 @@ const Root = ({filters, setFilters}) => {
               <div className="arrow-right" style={{borderLeft: '32px solid #7dcfff'}}></div>
                 <div className='numberCircle'>3</div>
                 <div className='odigia-title'>
-                  Αγγελλία
+                  Αγγελία
                   <hr style={{width:'80%'}} />
                 </div>
                 <div className='odigia-text'>
@@ -442,105 +510,49 @@ const Root = ({filters, setFilters}) => {
         <div className='diadikasia-text' style={{marginBottom:'10px'}}>Αξιολογήσεις</div>
         <hr style={{width:'10%', marginBottom:'30px'}} />
         {/*https://kenwheeler.github.io/slick/*/}
+
+        { featuredRatings  &&
         <Slider {...carouselSettings} style={{margin:'0 auto', marginBottom:'200px', width:'70%'}}>
-          <div className='slide' style={{display:'flex', flexDirection:'column', textAlign:'left'}}>
-            <StarRatings
-              rating={3.5}
-              starRatedColor="gold"
-              starDimension="30px"
-              starSpacing="5px"
-              numberOfStars={5}
-              name='rating'
-              style={{alignItems:'left'}}
-            />
+          { featuredRatings.map((el) => {
+            return (
+              <div className='slide' style={{display:'flex', flexDirection:'column', textAlign:'left'}}>
+                <StarRatings
+                  rating={el.rating}
+                  starRatedColor="gold"
+                  starDimension="30px"
+                  starSpacing="5px"
+                  numberOfStars={5}
+                  name='rating'
+                  style={{alignItems:'left'}}
+                />
 
-            <div style={{margin:'0 auto', justifyContent:'center',   maxWidth:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
+                <div style={{margin:'0 auto', justifyContent:'center',   maxWidth:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
 
-            <h2 style={{textAlign:'left'}}>Καλή δουλειά</h2>
-            <h4 style={{textAlign:'left'}}>Θα προτιμούσα πιο ευέλικτο ωράριο</h4>
+                <h2 style={{textAlign:'left'}}>{el.title}</h2>
+                <h4 style={{textAlign:'left', marginTop:'-20px'}}>{el.content}</h4>
 
-            <div style={{display:'flex', flexDirection:'row'}}>
-              <div style={{marginRight:'10px', textAlign:'left'}}>
-                <img src='icons/pfp.svg' width={48} />
-              </div>
-              <div>
-                <div>
-                  Περικλής Εξηντάρης
+                <div style={{display:'flex', flexDirection:'row'}}>
+                  <div style={{marginRight:'10px', textAlign:'left'}}>
+                    {/* <img src='icons/pfp.svg' width={48} /> */}
+                    <CircleWithInitialsProfile name={el.author.split(" ")[0]} surname={el.author.split(" ")[1]} size={48} />
+                  </div>
+                  <div>
+                    <div>
+                      {el.author}
+                    </div>
+                    <div style={{textAlign:'left'}}>
+                      <FormattedTimestamp timestamp={el.review_date} />
+                    </div>
+                  </div>
                 </div>
-                <div style={{textAlign:'left'}}>
-                  27/05/2024
-                </div>
-              </div>
-            </div>
 
-            </div>
-          </div>
-          <div className='slide' style={{display:'flex', flexDirection:'column', textAlign:'left'}}>
-            <StarRatings
-              rating={3.5}
-              starRatedColor="gold"
-              starDimension="30px"
-              starSpacing="5px"
-              numberOfStars={5}
-              name='rating'
-              style={{alignItems:'left'}}
-            />
-
-            <div style={{margin:'0 auto', justifyContent:'center',   maxWidth:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
-
-            <h2 style={{textAlign:'left'}}>Καλή δουλειά</h2>
-            <h4 style={{textAlign:'left'}}>Θα προτιμούσα πιο ευέλικτο ωράριο</h4>
-
-            <div style={{display:'flex', flexDirection:'row'}}>
-              <div style={{marginRight:'10px', textAlign:'left'}}>
-                <img src='icons/pfp.svg' width={48} />
-              </div>
-              <div>
-                <div>
-                  Περικλής Εξηντάρης
-                </div>
-                <div style={{textAlign:'left'}}>
-                  27/05/2024
                 </div>
               </div>
-            </div>
+            )
 
-            </div>
-          </div>
-          <div className='slide' style={{display:'flex', flexDirection:'column', textAlign:'left'}}>
-            <StarRatings
-              rating={3.5}
-              starRatedColor="gold"
-              starDimension="30px"
-              starSpacing="5px"
-              numberOfStars={5}
-              name='rating'
-              style={{alignItems:'left'}}
-            />
-
-            <div style={{margin:'0 auto', justifyContent:'center',   maxWidth:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
-
-            <h2 style={{textAlign:'left'}}>Καλή δουλειά</h2>
-            <h4 style={{textAlign:'left'}}>Θα προτιμούσα πιο ευέλικτο ωράριο</h4>
-
-            <div style={{display:'flex', flexDirection:'row'}}>
-              <div style={{marginRight:'10px', textAlign:'left'}}>
-                <img src='icons/pfp.svg' width={48} />
-              </div>
-              <div>
-                <div>
-                  Περικλής Εξηντάρης
-                </div>
-                <div style={{textAlign:'left'}}>
-                  27/05/2024
-                </div>
-              </div>
-            </div>
-
-            </div>
-          </div>
-
+        })}
         </Slider>
+      }
 
 
 

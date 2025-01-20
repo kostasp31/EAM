@@ -161,13 +161,13 @@ const Help = () => {
         <hr />
         <div className='panel-grid'>
           <div className='first-row'>
-            <div className='first-row-element' onClick={() => navigate('/')}>
+            <div className='first-row-element' onClick={() => navigate('/help/parents')}>
               <div className='heading'>Για γονείς</div>
               <div className='content'>
                 Πληροφορίες σχετικά με τα κριτήρια επιλεξιμότητας και την διαδικασία υποβολής αίτησης.
               </div>
             </div>
-            <div className='first-row-element' onClick={() => navigate('/')}>
+            <div className='first-row-element' onClick={() => navigate('/help/profs')}>
               <div className='heading'>Για Επαγγελματίες</div>
               <div className='content'>
               Πληροφορίες σχετικά με τα κριτήρια επιλεξιμότητας τη δημιουργία αγγελίας και τη σύναψη συμφωνητικού.
@@ -195,6 +195,13 @@ const Help = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto', marginBottom:'100px', marginTop:'-200px' }}>
+        <button className='button-40' style={{ display: 'flex', alignItems: 'center' }} onClick={() => navigate('/')}>
+          <img src='/icons/back.svg' width='28px' style={{ marginRight: '8px' }} />
+          <span>Επιστροφή</span>
+        </button>
       </div>
 
       <Footer />

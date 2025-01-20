@@ -29,6 +29,11 @@ import Profile_Profs from "./components/Profile_profs"
 import Ratings from "./components/Ratings"
 import Public_Profile from "./components/Public_Profile"
 
+import Help_Parents from "./components/Help_Parents"
+import Help_Profs from "./components/Help_Profs"
+
+import Preview_Application from "./components/Preview_Application"
+
 
 const App = () => {
   const [filters, setFilters] = useState({
@@ -65,7 +70,11 @@ const App = () => {
           <Route path="profile_profs" element={<Profile_Profs />} />
           <Route path="ratings" element={<Ratings />} />
 
+          <Route path="help/parents" element={<Help_Parents />} />
+          <Route path="help/profs" element={<Help_Profs />} />
+
           <Route path="search/profile/:id" element={<Public_Profile selectedDate={selectedDate} setSelectedDate={setSelectedDate} />} />
+          <Route path="applications/preview/:index" element={<Preview_Application />} />
 
 
           <Route path="/" element={<Root filters={filters} setFilters={setFilters}/>} />

@@ -2,7 +2,7 @@ import React from 'react'
 import Footer from "./Footer.jsx"
 import { FIREBASE_AUTH, FIREBASE_DB, FIREBASE_APP } from '../config/firebase'
 import { onAuthStateChanged, signOut } from 'firebase/auth'
-import { collection, addDoc, query, where, getDocs, doc, updateDoc } from 'firebase/firestore'
+import { collection, addDoc, query, where, getDocs, doc, updateDoc, getDoc } from 'firebase/firestore'
 
 import { useNavigate } from 'react-router'
 import { useState, useEffect } from 'react'
@@ -27,7 +27,7 @@ const FormattedTimestamp = ({timestamp}) => {
   )
 }
 
-const Colab = ({colab_data, refuse_colab, setShowingColab, setTitle}) => {
+const Colab = ({colab_data, refuse_colab, accept_colab, setShowingColab, setTitle}) => {
   const verifyPayment = async(month) => {
     try {
       // Create a query against the collection
@@ -82,7 +82,7 @@ const Colab = ({colab_data, refuse_colab, setShowingColab, setTitle}) => {
           <div style={{width:'fit-content', marginLeft:'auto', marginRight:'auto'}}>
             <div style={{display:'flex', flexDirection:'row', justifyContent:'center', alignItems:'center', marginTop:'100px', gap:'40px', marginLeft:'250px' }}>
               <div style={{ width: 'fit-content'}}>
-                <button className='button-40' style={{ display: 'flex', alignItems: 'center' }}>
+                <button className='button-40' style={{ display: 'flex', alignItems: 'center' }} onClick={() => accept_colab(colab_data.id)}>
                   <img src='icons/check_circle.svg' width='28px' style={{ marginRight: '8px' }} />
                   <span>Αποδοχή</span>
                 </button>
@@ -100,7 +100,7 @@ const Colab = ({colab_data, refuse_colab, setShowingColab, setTitle}) => {
         :
         <div style={{marginLeft:'300px', display:'flex', flexDirection:'column',gap:'50px', marginBottom:'100px'}}>
           <div style={{fontSize:'25px', fontWeight:600}}>
-            Ισχύς συνεργασίας: <FormattedTimestamp timestamp={colab_data.start_date} /> - <FormattedTimestamp timestamp={colab_data.end_date} />
+            Ισχύς συνεργασίας: {colab_data.startDay}/{colab_data.startMonth}/{colab_data.startYear} - {colab_data.endDay}/{colab_data.endMonth}/{colab_data.endYear}
           </div>
 
           <div>
@@ -131,56 +131,46 @@ const Colab = ({colab_data, refuse_colab, setShowingColab, setTitle}) => {
                   return(
                   <tr style={{ backgroundColor: '#f9f9f9' }}>
                     <td style={{ border: '1px solid #ddd', padding: '12px' }}>{el.month}</td>
-                    <td style={{ border: '1px solid #ddd', padding: '12px' }}><FormattedTimestamp timestamp={el.paydate}/></td>
+                    <td style={{ border: '1px solid #ddd', padding: '12px' }}>{el.payed ? <FormattedTimestamp timestamp={el.paydate}/> : '-'}</td>
                     <td style={{ border: '1px solid #ddd', padding: '12px' }}>
                       <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto'}}>
-
-
-
-
-  <Popup
-    trigger={
-	<button className='button-40' style={{ display: 'flex', alignItems: 'center', height:'40px'}} disabled={el.payed}>
-	  <img src='icons/payment.svg' width='28px' style={{ marginRight: '8px' }} />
-	  <span>Voucher</span>
-	</button>
-		}
-    modal
-    nested
-    style={{marginLeft:'250px'}}
-  >
-    {close => (
-      <div className="modal">
-        <button className="close" onClick={close}>
-          <img src='icons/cancel.svg' />
-        </button>
-        <div className="header1">Σαρώστε τον παρακάτω κωδικό για την παραλαβή της πληρωμής σας</div>
-        <div className="content1">
-          <QRCode value= {el.voucher}/>
-        </div>
-        <div className="actions">
-          <button
-            style={{width:'30%'}}
-            className="button-41"
-            onClick={() => {
-              verifyPayment(el.month)
-              close()
-            }}
-          >
-            Ολοκλήρωση πληρωμής
-          </button>
-        </div>
-      </div>
-    )}
-  </Popup>
-
-
-
-
-                        {/* <button className='button-40' style={{ display: 'flex', alignItems: 'center', height:'40px'}}>
-                          <img src='icons/payment.svg' width='28px' style={{ marginRight: '8px' }} />
-                          <span>Voucher</span>
-                        </button> */}
+                        <Popup
+                          trigger={
+                            <button className='button-40' style={{ display: 'flex', alignItems: 'center', height:'40px', backgroundColor:el.payed ? '#111827' : '#c4c4c4', cursor:el.payed ? 'pointer' : 'default'}} disabled={!el.payed}>
+                              <img src='icons/payment.svg' width='28px' style={{ marginRight: '8px' }} />
+                              <span>Voucher</span>
+                            </button>
+                          }
+                          modal
+                          nested
+                          disabled={!el.payed}
+                          style={{marginLeft:'250px'}}
+                        >
+                          {close => (
+                            <div className="modal">
+                              <button className="close" onClick={close}>
+                                <img src='icons/cancel.svg' />
+                              </button>
+                              <div className="header1">Σαρώστε τον παρακάτω κωδικό για την παραλαβή της πληρωμής σας</div>
+                              <div className="header" style={{marginTop:'-20px', marginBottom:'50px'}}>Η ενέργεια αυτή θα σας ανακατευθύνει σε ασφαλές τραπεζικό περιβάλλον</div>
+                              <div className="content1">
+                                <QRCode value= {el.voucher}/>
+                              </div>
+                              <div className="actions">
+                                <button
+                                  style={{width:'200px'}}
+                                  className="button-41"
+                                  onClick={() => {
+                                    verifyPayment(el.month)
+                                    close()
+                                  }}
+                                >
+                                  Λήψη πληρωμής
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </Popup>
                       </div>
                     </td>
                   </tr>
@@ -312,17 +302,25 @@ const Colabs_profs = () => {
 
   const fetchColabData = async () => {
     try {
-      // console.log("colabrefs:", colabRefs)
-      const q = query(collection(FIREBASE_DB, 'colabs'), where('id', 'in', colabRefs));
-      const querySnapshot = await getDocs(q)
-      const colabs_all = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }))
+
+      const colabs_all = []
+      for (const id of colabRefs) {
+        const docRef = doc(FIREBASE_DB, 'colabs', id);  
+        const docSnap = await getDoc(docRef)
+    
+        if (docSnap.exists()) {
+          colabs_all.push({ id: docSnap.id, ...docSnap.data() })
+        }
+        else {  
+          console.log(`No document found with ID: ${id}`)
+        }
+      }
+
+      console.log("colabrefs:", colabRefs)
 
       setColabs(colabs_all)
 
-      // console.log("colab_data: ", colabs_all)
+      console.log("colab_data: ", colabs_all)
     } catch (error) {
       console.error('Error fetching user data:', error)
     }
@@ -330,24 +328,35 @@ const Colabs_profs = () => {
 
   const refuseColab = async (colab_id) => {
     try {
-      // Create a query against the collection
-      const q = query(collection(FIREBASE_DB, 'colabs'), where('id', '==', colab_id))
-      const querySnapshot = await getDocs(q)
-      if (!querySnapshot.empty) {
-        const docRef = doc(FIREBASE_DB, 'colabs', querySnapshot.docs[0].id)
+      const docRef = doc(FIREBASE_DB, 'colabs', colab_id)
 
-        // Update the document with the new value
-        await updateDoc(docRef, {
-          accepted: true,
-          active: false,
-          refused: true,
-        })
-        // console.log("Document updated successfully")
-        setShowingColab(false)
-        triggerNotif("success", "Επιτυχία", "Αρνηθήκατε τη συνεργασία")
-      } else {
-        console.log("No such document found with the specified uid!")
-      }
+      // Update the document with the new value
+      await updateDoc(docRef, {
+        accepted: true,
+        active: false,
+        refused: true,
+      })
+      // console.log("Document updated successfully")
+      setShowingColab(false)
+      triggerNotif("success", "Επιτυχία", "Αρνηθήκατε τη συνεργασία")
+    } catch (error) {
+      console.error("Error updating document: ", error)
+    }
+  }
+
+  const accept_colab = async (colab_id) => {
+    try {
+      const docRef = doc(FIREBASE_DB, 'colabs', colab_id)
+
+      // Update the document with the new value
+      await updateDoc(docRef, {
+        accepted: true,
+        active: true,
+        refused: false,
+      })
+      // console.log("Document updated successfully")
+      setShowingColab(false)
+      triggerNotif("success", "Επιτυχία", "Δεχτήκατε τη συνεργασία")
     } catch (error) {
       console.error("Error updating document: ", error)
     }
@@ -534,12 +543,12 @@ const Colabs_profs = () => {
           </div>
           :
           <div>
-            <Colab colab_data={currentColab} refuse_colab={refuseColab} setShowingColab={setShowingColab} setTitle={setTitle}/>
+            <Colab colab_data={currentColab} refuse_colab={refuseColab} accept_colab={accept_colab} setShowingColab={setShowingColab} setTitle={setTitle}/>
             <button onClick={() => {setCurrentColab(null); setShowingColab(false)}}>Επιστροφή</button>
           </div>
         :
         (isProf === 'parent') ?
-          <div className='main-content'>
+          <div className='main-content' style={{height:'20vh'}}>
             <div style={{marginLeft:'250px'}}>
               <h1 style={{ marginTop: "35px" }}>&emsp;Συνδεθείτε ως επαγγελματίας</h1>
               <div style={{ width: 'fit-content', marginLeft: 'auto', marginRight: 'auto' }}>
